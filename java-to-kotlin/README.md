@@ -1,8 +1,10 @@
+# from java to kotlin
+
 > 최태현님의 [자바 개발자를 위한 코틀린 입문](https://www.inflearn.com/course/java-to-kotlin/dashboard) 강의를 보고 실습한 내용입니다.  
 > README 에는 강의에서 설명한 내용, 여러 문서들, 제 생각이 섞여 있습니다.  
 > ~저도 사람이기 때문에~ 정확하지 않은 정보가 있을 수 있습니다.  
 
-# 코틀린에서 변수와 타입, 연산자를 다루는 방법
+## 코틀린에서 변수와 타입, 연산자를 다루는 방법
 
 ```kotlin
 var number1: Long = 10L
