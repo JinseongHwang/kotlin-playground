@@ -1,6 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.8.0'
     id 'application'
+    id 'java'
 }
 
 group = 'me.study'
@@ -11,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
