@@ -4,7 +4,9 @@
 > README 에는 강의에서 설명한 내용, 여러 문서들, 제 생각이 섞여 있습니다.  
 > ~저도 사람이기 때문에~ 정확하지 않은 정보가 있을 수 있습니다.  
 
-## 코틀린에서 변수와 타입, 연산자를 다루는 방법
+# A. 코틀린에서 변수와 타입, 연산자를 다루는 방법
+
+## A-1. var과 val 다루기
 
 ```kotlin
 var number1: Long = 10L
@@ -37,6 +39,8 @@ val number2: Long = 10L // Value: final
   - 하지만 Kotlin에서는 똑똑하게 알아서 처리해준다. 개발자는 그저 Reference type으로 작성하면 된다.
 
 <br/>
+
+## A-2. null 다루기
 
 ```kotlin
 val number1: Long = 10L // not null
@@ -153,6 +157,9 @@ fun startsWithA(str: String): Boolean { // str에 null을 허용하지 않음
   - 단, SPoF가 되지 않도록 고려하는 것도 매우 중요하다.
 
 <br/>
+
+## A-3. 타입 다루기
+
 
 
 
