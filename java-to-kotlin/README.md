@@ -99,7 +99,7 @@ println(str2!!.startsWith("A")) // -> NPE 발생
 
 ```java
 /* Java code */
-private final Person person = new Person("jinseonghwang");
+final Person person = new Person("jinseonghwang");
 ```
 ```kotlin
 /* Kotlin code */
@@ -160,7 +160,143 @@ fun startsWithA(str: String): Boolean { // str에 null을 허용하지 않음
 
 ## A-3. 타입 다루기
 
+```kotlin
+val num1: Int = 3
+val num2: Long = num1 // compile error: type mismatch
+val num2: Long = num1.toLong() // Good!
+```
+- Kotlin에서는 타입 변환을 명시적으로 해줘야 한다.
+- `toXXX()` 메서드가 잘 구현되어 있으니 적극 활용하자.
 
+<br/>
+
+```kotlin
+val num1: Int? = 3
+val num2: Long = num1?.toLong() ?: 0L
+```
+- 타입 변환 또한 마찬가지로, nullable인 경우에는 null 처리를 해줘야 한다.
+
+<br/>
+
+```java
+/* Java code */
+if (obj instanceof Person) { ... }
+if (!(obj instanceof Person)) { ... }
+```
+```kotlin
+/* Kotlin code */
+if (obj is Person) { ... }
+if (obj !is Person) { ... }
+```
+- Object 타입이 Person 타입인지 알고 싶다면 Java에서는 `instanceof` 키워드를 사용했다.
+- Kotlin에서는 `is` 를 사용해서 타입 검증을 할 수 있다.
+- 만약 Object 가 Person 타입이 아닌지 알고 싶다면 `!is` 로 작성하면 된다. 보다 간결해졌다.
+
+<br/>
+
+```java
+/* Java code */
+final Person person = (Person)obj;
+```
+```kotlin
+/* Kotlin code */
+val person = obj as Person
+```
+- Java에서 타입 캐스팅을 할 때는 괄호 안에 타입을 작성했어야 했다.
+- Kotlin에서는 `as` 키워드를 사용해서 타입 캐스팅을 해준다.
+  - 단, obj 가 Person 타입이 아니라면 ClassCaseException 이 발생한다.
+
+<br/>
+
+```kotlin
+fun printAgeIfPerson(obj: Any?) {
+    val person = obj as? Person
+    println(person?.age)
+}
+```
+- 만약 obj가 nullable 변수라면, `as?` 로 null 처리를 할 수 있다.
+  - obj 에 실제 객체가 저장되어 있다면 정상적으로 `person.age` 를 출력한다.
+  - obj 에 null이 들어있다면 person 변수에 null이 들어가게 되고, age에 접근하면 NPE가 발생한다.
+- obj가 Person 타입이 아니라면 `as?` 가 아니라 `as` 일 때는 ClassCaseException이 발생했지만, `as?` 일 때는 null 이 반환된다.
+
+<br/>
+
+```kotlin
+Any
+```
+- Java의 `Object` 역할을 Kotlin에서는 `Any`가 수행한다. 모든 객체의 최상위 타입이다.
+- 모든 Primitive type의 최상위 타입도 `Any`이다. Primitive type과 Reference type을 구분하지 않고 모두 최상위에는 `Any`가 있다.
+- `Any` 자체로는 null을 저장할 수 없기 때문에 null을 저장하고 싶다면 `Any?`로 표현해야 한다.
+- Any에도 Object와 마찬가지로 `equals()`, `hashCode()`, `toString()`이 존재한다.
+
+<br/>
+
+```kotlin
+Unit
+```
+- Java의 `void` 역할을 Kotlin에서는 `Unit`이 수행한다.
+- `void`와 다르게 `Unit`은 그 자체로 타입 인자로 사용 가능하다.
+  - Java에서는 제네릭 타입으로 `void`를 쓰고 싶다면 Wrapper class인 `Void` 를 사용해야 했다.
+  - 하지만 Kotlin에서는 `Unit`을 그대로 사용해도 된다.
+
+<br/>
+
+```kotlin
+Nothing
+```
+```kotlin
+fun fail(message: String): Nothing {
+  throw IllegalArgumentException(message)
+}
+```
+- 함수가 정상적으로 끝나지 않았다는 사실을 표현하는 역할이다.
+- 무조건 예외를 반환하는 함수 or 무한 루프 함수 등에는 반환 타입으로 `Nothing`을 사용하면 된다.
+
+<br/>
+
+```kotlin
+val person = Person("황진성", 100)
+val log = "이름: ${person.name} / 나이: ${person.age}"
+```
+- Java에서는 변수가 포함된 문자열을 만들 때 `String.format()` or `StringBuilder` 등을 사용해야 합니다.
+- Kotlin에서는 `${variable}` 방식으로 변수가 포함된 문자열을 만들 수 있습니다.
+  - 단일 변수인 경우에는 중괄호를 생략할 수도 있지만, 가독성, 일괄변환, 정규식 활용 등 측면에서 좋기 때문에 중괄호를 생략하지 않는 것이 선호됩니다.
+  - 하지만 팀 내 문화에 따라 규칙을 지키는 것이 더 중요합니다.
+- String interpolation 기능이라고 불립니다.
+
+<br/>
+
+```kotlin
+val str = """
+        ABC
+        123
+        4567890
+    """.trimIndent()
+println(str.javaClass) // -> class java.lang.String
+println(str.length) // -> 15
+println(str.replace("\n", "#")) // -> ABC#123#4567890
+```
+- Java에서는 여러 줄 문자열을 만들기 위해서 `StringBuilder` 등을 사용해야 합니다.
+- Kotlin에서는 큰따옴표(") 3개를 연달아 쓰고 묶어주면 여러 줄 문자열을 만들 수 있습니다.
+  - `trimIndent()` 메서드를 사용하면 불필요한 indent를 제거해줍니다.
+- 줄 뒤에 자동으로 `\n`을 넣어줍니다.
+
+<br/>
+
+```java
+/* Java code */
+final String str = "ABCDE";
+char ch = str.charAt(1);
+```
+```kotlin
+/* Kotlin code */
+val str = "ABCDE"
+val ch = str[1]
+```
+- Java에서 String indexing을 하기 위해서는 `charAt()` 을 사용합니다.
+- Kotlin에서는 일반적인 Array 처럼 `[n]` 로 표기합니다. ~드디어!~
+
+<br/>
 
 
 
