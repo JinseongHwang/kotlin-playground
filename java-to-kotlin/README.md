@@ -94,9 +94,11 @@ println(str2!!.startsWith("A")) // -> NPE 발생
 <br/>
 
 ```java
+/* Java code */
 private final Person person = new Person("jinseonghwang");
 ```
 ```kotlin
+/* Kotlin code */
 val person = Person("jinseonghwang")
 ```
 - 객체를 인스턴스화 할 때 `new`를 붙이지 않는다.
