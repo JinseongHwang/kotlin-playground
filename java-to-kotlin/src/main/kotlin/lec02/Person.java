@@ -1,5 +1,7 @@
 package lec02;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Person {
 
     private final String name;
@@ -8,6 +10,8 @@ public class Person {
         this.name = name;
     }
 
+
+    @NotNull
     public String getName() {
         return name;
     }
