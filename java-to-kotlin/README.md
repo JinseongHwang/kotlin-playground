@@ -94,7 +94,7 @@ println(str2!!.startsWith("A")) // -> NPE 발생
 <br/>
 
 ```java
-private final Person person = new Person("jinseonghwang")
+private final Person person = new Person("jinseonghwang");
 ```
 ```kotlin
 val person = Person("jinseonghwang")
