@@ -298,5 +298,85 @@ val ch = str[1]
 
 <br/>
 
+## A-4. 연산자 다루기
 
+```kotlin
 
+```
+- Java에서 Comparable 인터페이스를 구현한 클래스는 compareTo() 를 구현해서 비교가 가능하다.
+  - 주어진 인자가 더 작으면 양수, 같으면 0, 더 크면 음수를 반환한다.
+- 
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
