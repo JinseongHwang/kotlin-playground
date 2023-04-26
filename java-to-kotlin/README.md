@@ -258,11 +258,11 @@ fun fail(message: String): Nothing {
 val person = Person("황진성", 100)
 val log = "이름: ${person.name} / 나이: ${person.age}"
 ```
-- Java에서는 변수가 포함된 문자열을 만들 때 `String.format()` or `StringBuilder` 등을 사용해야 합니다.
-- Kotlin에서는 `${variable}` 방식으로 변수가 포함된 문자열을 만들 수 있습니다.
-  - 단일 변수인 경우에는 중괄호를 생략할 수도 있지만, 가독성, 일괄변환, 정규식 활용 등 측면에서 좋기 때문에 중괄호를 생략하지 않는 것이 선호됩니다.
-  - 하지만 팀 내 문화에 따라 규칙을 지키는 것이 더 중요합니다.
-- String interpolation 기능이라고 불립니다.
+- Java에서는 변수가 포함된 문자열을 만들 때 `String.format()` or `StringBuilder` 등을 사용해야 한다.
+- Kotlin에서는 `${variable}` 방식으로 변수가 포함된 문자열을 만들 수 있다.
+  - 단일 변수인 경우에는 중괄호를 생략할 수도 있지만, 가독성, 일괄변환, 정규식 활용 등 측면에서 좋기 때문에 중괄호를 생략하지 않는 것이 선호된다.
+  - 하지만 팀 내 문화에 따라 규칙을 지키는 것이 더 중요하다.
+- String interpolation 기능이라고 불린다.
 
 <br/>
 
@@ -276,10 +276,10 @@ println(str.javaClass) // -> class java.lang.String
 println(str.length) // -> 15
 println(str.replace("\n", "#")) // -> ABC#123#4567890
 ```
-- Java에서는 여러 줄 문자열을 만들기 위해서 `StringBuilder` 등을 사용해야 합니다.
-- Kotlin에서는 큰따옴표(") 3개를 연달아 쓰고 묶어주면 여러 줄 문자열을 만들 수 있습니다.
-  - `trimIndent()` 메서드를 사용하면 불필요한 indent를 제거해줍니다.
-- 줄 뒤에 자동으로 `\n`을 넣어줍니다.
+- Java에서는 여러 줄 문자열을 만들기 위해서 `StringBuilder` 등을 사용해야 한다.
+- Kotlin에서는 큰따옴표(") 3개를 연달아 쓰고 묶어주면 여러 줄 문자열을 만들 수 있다.
+  - `trimIndent()` 메서드를 사용하면 불필요한 indent를 제거해준다.
+- 줄 뒤에 자동으로 `\n`을 넣어준다.
 
 <br/>
 
@@ -293,31 +293,60 @@ char ch = str.charAt(1);
 val str = "ABCDE"
 val ch = str[1]
 ```
-- Java에서 String indexing을 하기 위해서는 `charAt()` 을 사용합니다.
-- Kotlin에서는 일반적인 Array 처럼 `[n]` 로 표기합니다. ~드디어!~
+- Java에서 String indexing을 하기 위해서는 `charAt()` 을 사용한다.
+- Kotlin에서는 일반적인 Array 처럼 `[n]` 로 표기한다. ~드디어!~
 
 <br/>
 
 ## A-4. 연산자 다루기
 
-```kotlin
-
+```java
+/* Java code */
+if (money1.compareTo(money2) > 0) { ... }
 ```
-- Java에서 Comparable 인터페이스를 구현한 클래스는 compareTo() 를 구현해서 비교가 가능하다.
+```kotlin
+/* Kotlin code */
+if (money1 > money2) { ... }
+```
+- Java에서 객체 간 비교를 하기 위해서 Comparable 인터페이스 상속 후 compareTo() 를 구현해서 비교가 가능하다.
   - 주어진 인자가 더 작으면 양수, 같으면 0, 더 크면 음수를 반환한다.
-- 
+- Java 에서는 객체 간 비교를 위해서 `compareTo()` 를 명시적으로 호출해줘야 했지만, Kotlin에서는 부등호로 객체 비교 시 자동으로 `compareTo()` 를 호출해준다.
 
 <br/>
 
 ```kotlin
+val money1 = JavaMoney(1_000L)
+val money2 = money1
+val money3 = JavaMoney(1_000L)
 
+println(money1 === money2) // true
+println(money1 == money2) // true
+println(money1 === money3) // false
+println(money1 == money3) // true
 ```
+- Java에서는 동일성 검증에서 `==` 을 사용하고, 동등성 검증에서 Object의 `equals()` 를 사용한다.
+- Kotlin에서는 동일성 겅증에서 `===` 을 사용하고, 동등성 검증에서 `==` 를 사용한다.
 
 <br/>
 
 ```kotlin
+data class Money(
+    val amount: Long
+) {
+    operator fun plus(other: Money): Money {
+        return Money(this.amount + other.amount)
+    }
+}
 
+fun main() {
+    val money1 = Money(1_000L)
+    val money2 = Money(2_000L)
+    println(money1 + money2) // Money(amount=3000)
+}
 ```
+- Kotlin에서는 연산자 오버로딩이 가능하다.
+- `+` 를 사용하면 자동으로 `plus()` 메서드 호출해준다.
+- 연산자 별 지정된 메서드 이름이 궁금하다면 [문서](https://kotlinlang.org/docs/operator-overloading.html)에 자세히 나와있다.
 
 <br/>
 
