@@ -418,46 +418,80 @@ fun judgeNumber(number: Int) {
 ## B-2. 반복문 다루기
 
 ```kotlin
-
+val numbers = listOf(1, 2, 3)
+for (number in numbers) {
+    println(number)
+}
 ```
+- for-each 문을 사용할 때 Java에서는 `:` 를 사용했다면, Kotlin에서는 `in` 을 사용한다.
+- `in` 뒤에 있는 자료형은 `Iterable` 을 구현한 객체라면 뭐든 가능하다.
 
 <br/>
 
 ```kotlin
+// 1, 2, 3
+for (i in 1..3) {
+    println(i)
+}
 
+// 3, 2, 1
+for (i in 3 downTo 1) {
+     println(i)
+}
+
+// 1, 3, 5
+for (i in 1..5 step 2) {
+     println(i)
+}
+
+// 10, 7, 4, 1
+for (i in 10 downTo 1 step 3) {
+     println(i)
+}
 ```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
+- `..`, `downTo`, `step` 등을 사용해서 다양한 반복문에서의 표현이 가능하다.
+- `..` 은 `IntRange` 를 구현하는 방법 중 하나이다. `IntRange`는 `IntProgression`를 상속받는다.
+  - `IntProgression` 의 의미는 정수 등차수열이다.
+  - step의 기본 값은 1로 설정되어 있다.
+  - 따라서 `1..3` 의 의미는 시작값=1, 끝값=3, 공차=1 인 등차수열을 만들어서 반환하라는 의미를 가진다.
+  - `3 downTo 1` 의 의미는 시작값=3, 끝값=1, 공차=-1 인 등차수열을 만들어서 반환하라는 의미를 가진다.
+  - 단, 공차가 -1 이라고 해서 `step`에 음수를 넣을 수 있는건 아니다. 공차보다는 말 그대로 간격이라는 의미로 생각하고 사용하면 된다.
+- 여기서 활용한 `downTo`, `step` 또한 함수이다. 중위 호출 함수라고 불리는 기능이다. 함수 호출 방법만 다르게 한 것이다.
+  - 일반적으로 `변수.함수이름(args)` 구조이지만, `변수 함수이름 args` 로 작성하는 것도 가능하게 한 것이다.
 
 <br/>
 
 ## B-3. 예외 다루기
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+
 ## B-4. 함수 다루기
