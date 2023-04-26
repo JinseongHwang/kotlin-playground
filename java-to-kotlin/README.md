@@ -464,34 +464,107 @@ for (i in 10 downTo 1 step 3) {
 ## B-3. 예외 다루기
 
 ```kotlin
-
+fun parseInt(str: String): Int? {
+    return try {
+        str.toInt()
+    } catch (e: NumberFormatException) { 
+        null
+    }
+}
 ```
+- try-catch-finally 구문은 Java와 Kotlin 모두 동일하다.
+- Kotlin 에서는 try-catch-finally 역시 Expression 으로 취급되기 때문에 그대로 return 하는 것이 가능하다.
 
 <br/>
 
 ```kotlin
-
+fun readFile() {
+    val currentFile = File(".")
+    val file = File(currentFile.absolutePath + "/a.txt")
+    val reader = BufferedReader(FileReader(file))
+    for (line in reader.lines()) {
+        println(line)
+    }
+    reader.close()
+}
 ```
+- Java에서 파일 읽기 코드를 작성하게 되면 `IOException` 이 발생할 여지가 생긴다.
+  - `IOException`는 Checked Exception 이기 때문에 메서드 레벨에 `throws IOException` 이라고 명시를 해줘야만 한다.
+- Kotlin 에서는 Checked Exception과 Unchecked Exception을 따로 구분하지 않는다. 따라서 `throws` 구문을 작성하지 않아도 된다.
+  - 꼭 구분하고자 한다면 Kotlin의 모든 예외는 Unchecked Exception 이라고 표현할 수 있다. 
 
 <br/>
 
+```java
+/* Java code */
+public void readFile(String path) throws IOException {
+      try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            reader.lines().forEach(System.out::println);
+      }
+}
+```
 ```kotlin
-
+/* Kotlin code */
+fun readFile(path: String) {
+    BufferedReader(FileReader(path)).use { reader ->
+        for (line in reader.lines()) {
+            println(line)
+        }
+    }
+}
 ```
+- Java에서는 try-with-resources 구문으로 `Closeable` 객체를 안전하게 다뤘었다.
+- Kotlin에서는 try-with-resources 구문이 사라지고, `Closeable`의 확장함수 `use()` 를 활용한다.
 
 <br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
 
 ## B-4. 함수 다루기
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
