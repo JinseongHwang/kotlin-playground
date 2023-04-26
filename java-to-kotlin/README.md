@@ -606,6 +606,113 @@ fun main() {
 
 <br/>
 
+# C. 코틀린에서 OOP
+
+## C-1. 클래스 다루기
+
+```kotlin
+// Step 1: 기본적인 클래스 구조
+class Person constructor(name: String, age: Int) {
+    val name: String = name
+    var age: Int = age
+}
+
+// Step 2: constructor 생략
+class Person(name: String, age: Int) {
+    val name: String = name
+    var age: Int = age
+}
+
+// Step 3: 필드 선언 및 대입 생략
+class Person(
+    val name: String,
+    var age: Int
+)
+```
+- 3개 모두 동일한 역할을 수행하는 클래스이다.
+- getter와 setter 모두 기본적으로 제공해준다.
+  - `val`은 `final` 필드이기 때문에 setter 가 생성되지 않는다.
+- `객체.필드` 형식으로 getter와 setter를 호출할 수 있다.
+  - 이 방법은 Java 코드를 가져와서 쓸 때도 동일하게 사용 가능하다.
+
+<br/>
+
+```kotlin
+class Person(
+    val name: String,
+    var age: Int,
+) {
+    init {
+        if (age <= 0) {
+            throw IllegalArgumentException("나이는 ${age} 일 수 없습니다.")
+        }
+    }
+}
+```
+- 객체 생성 시점에 어떠한 로직을 수행하고 싶다면 init{} 블럭을 사용할 수 있다.
+  - 생성자가 호출되는 시점에 1회만 실행된다.
+- 값을 적절히 만들어 주거나, validation 역할로 사용할 수 있다.
+
+<br/>
+
+```kotlin
+class Person(
+    val name: String,
+    var age: Int,
+) {
+    // 부생성자1
+    constructor(name: String): this(name, 1)
+  
+    // 부생성자2
+    constructor() : this("진송") {
+      println("부생성자2 호출 -> 부생성자1 호출 -> 주생성자 호출")
+    }
+}
+```
+- 나이가 1로 설정되는 생성자를 하나 더 만들고 싶다면, 클래스 블럭 내에서 `constructor` 로 만들 수 있다.
+  - 반환 타입에 `this()` 를 사용해서 작성하면 된다.
+- 클래스 이름 뒤에 오는 생성자를 주생성자(Primary constructor)라고 하고, 아래에 constructor 키워드로 만든 생성자를 부생성자(Secondary constructor)라고 한다.
+  - 주생성자는 반드시 있어야 한다. 단, 파라미터가 하나도 존재하지 않는 경우에는 생략이 가능하다.
+  - 부생성자는 있어도 되고 없어도 된다. 있으려면 반드시 최종적으로 this 를 호출해야 한다.
+
+<br/>
+
+```kotlin
+class Person(
+    val name: String = "진송",
+    var age: Int = 1,
+) {
+    init {
+        if (age <= 0) {
+            throw IllegalArgumentException("나이는 ${age} 일 수 없습니다.")
+        }
+    }
+}
+```
+- 부생성자를 사용하는 것은 복잡하기 때문에 권장되지 않는다.
+- Default Parameter를 사용하는 것이 권장된다.
+- 불가피하게 부생성자를 사용해야 한다면, 정적 팩터리 메서드로 해결하자.
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
 ```kotlin
 
 ```
@@ -630,3 +737,26 @@ fun main() {
 
 <br/>
 
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+## C-2. 상속 다루기
+## C-3. 접근 제어 다루기
+## C-4. object 키워드 다루기
+## C-5. 중첩 클래스 다루기
+## C-6. 다양한 클래스 다루기
