@@ -521,26 +521,88 @@ fun readFile(path: String) {
 ## B-4. 함수 다루기
 
 ```kotlin
+// Step 1: 코틀린스러운 함수
+fun max(a: Int, b: Int): Int {
+    return if (a > b) {
+        a
+    } else {
+        b
+    }
+}
 
+// Step 2: `=` 으로 수정하기
+fun max(a: Int, b: Int): Int = if (a > b) a else b
+
+// Step 3: Return type 생략하기
+fun max(a: Int, b: Int) = if (a > b) a else b
 ```
+- Step 1: 가장 일반적인 형태의 함수이다. return 을 하나로 모아서 표현했다.
+- Step 2: 함수의 결과 값이 하나로 결정되어 있기 때문에 중괄호 블럭 대신 `=` 로 함수를 표현할 수 있다.
+  - 더불어 한줄로 정리하고, 불필요한 중괄호를 제거할 수도 있다.
+- Step 3: 반환하는 값 모두 a, b 둘 중 하나이기 때문에 Return type이 Int 라는 것을 생략할 수도 있다.
+  - 단, 중괄호 블럭을 사용하는 경우에는 Unit(void) 타입이 아니라면 생략이 불가능하다. 명시적으로 Return type을 작성해야 한다.
 
 <br/>
 
 ```kotlin
-
+fun repeat(
+    str: String,
+    num: Int = 3,
+    useNewLine: Boolean = true,
+) {
+    for (i in 1..num) {
+        if (useNewLine) {
+            println(str)
+        } else {
+            print(str)
+        }
+    }
+}
 ```
+- Java 에서는 함수에 기본 값을 주고 싶다면 기본 값이 포함된 함수 오버로딩을 했어야 했다.
+- Kotlin 에서는 Default parameter 기능을 제공해준다.
+- 마지막 파라미터 뒤에 `,` 를 추가해도 잘 동작한다.
 
 <br/>
 
 ```kotlin
+fun printNameAndGender(name: String, gender: String) {
+    println("이름 = ${name}")
+    println("성별 = ${gender}")
+}
 
+fun main() {
+    printNameAndGender(
+        name = "jinseong",
+        gender = "male",
+    )
+}
 ```
+- Java에서는 파라미터에 값을 넣어줄 때 어디에 어떤 값을 넣는지 명시적으로 표현하고 싶다면 빌더 패턴을 사용했어야 했다.
+  - 주로 Lombok의 @Builder 를 쓰곤 했다.
+- Kotlin에서는 Named Parameter 기능을 제공해준다. `파라미터명 = 값` 형태로 함수 호출이 가능하다.
+  - 단, Java 코드의 메서드를 가져다 쓸 때는 이 기능이 동작하지 않는다.
+  - 바이트코드에서 파라미터 이름을 그대로 보존하지 않기 때문이다.
 
 <br/>
 
 ```kotlin
+fun printAll(vararg strings: String) {
+    for (str in strings) {
+        println(str)
+    }
+}
 
+fun main() {
+    printAll("A", "B", "C")
+    val array = arrayOf("D", "E", "F")
+    printAll(*array) // Spread 연산자
+}
 ```
+- Java 에서는 가변 인자를 사용하기 위해 `...` 을 사용했었다.
+- Kotlin 에서는 파라미터 앞에 `vararg` 를 사용해서 조금 더 명시적으로 가변인자 임을 표현할 수 있다.
+- 호출하는 쪽에서는 Java 와 동일하게 `,` 를 사용하면 된다.
+  - 단, 배열을 넣기 위해서는 마치 `,` 로 연결된 것 처럼 보이게 하는 Spread 연산자(`*`)를 사용해야 한다.
 
 <br/>
 
