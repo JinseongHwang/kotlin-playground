@@ -351,10 +351,71 @@ fun main() {
 <br/>
 
 ```kotlin
-
+if (score !in 0..100) {
+     throw IllegalArgumentException("${score}는 범위를 초과했습니다.")
+}
 ```
+- 범위를 표현할 때 `x..y` 을 사용 가능하다.
+  - x와 y를 모두 포함하는 범위이다. 예시를 보면 0 이상 100 이하를 의미한다.
+- `in`을 사용해서 해당 컬렉션 혹은 범위 내에 포함되는지 간단하게 확인 가능하다. `!`을 앞에 붙이면 `not in` 이 된다.
 
 <br/>
+
+# B. 코틀린에서 코드를 제어하는 방법
+
+## B-1. 제어문 다루기
+
+```kotlin
+fun getPassOrFail(score: Int): String {
+    return if (score >= 50) {
+        "P"
+    } else {
+        "F"
+    }
+}
+```
+- Java에서 if-else는 Statement 지만, Kotlin에서는 Expression 이다.
+  - Statement: 하나의 값으로 도출되지 않는 일반적인 프로그램의 문장 전체를 의미.
+  - Expression: 하나의 값으로 도출되는 문장.
+  - Statement 안에 Expression 이 포함되는 관계이다.
+- 따라서 Java와 달리 Kotlin에서는 if-else 구문 전체를 하나의 값으로 사용 가능하다.
+
+<br/>
+
+```kotlin
+fun getGradeWithSwitch(score: Int): String {
+    return when (score) {
+        in 90..100 -> "A"
+        in 80..89 -> "B"
+        in 70..79 -> "C"
+        else -> "D"
+    }
+}
+```
+- Java의 switch-case 문의 구조가 변경됐다.
+- Kotlin에서는 `when` 으로 작성한다.
+  - `switch` 대신에 `when` 을 쓰고,
+  - `case` 대신에 `조건 -> 반환값` 을 쓰고,
+  - `default` 대신에 `else` 를 쓴다.
+
+<br/>
+
+```kotlin
+fun judgeNumber(number: Int) {
+    when {
+        number == 0 -> println("주어진 숫자는 0입니다.")
+        number % 2 == 0 -> println("주어진 숫자는 짝수입니다.")
+        else -> println("주어진 숫자는 홀수입니다.")
+    }
+}
+```
+- when 뒤에 값을 생략할 수도 있다.
+- 조건부에는 어떠한 Expression 이 들어갈 수 있다.
+- when은 Enum class 혹은 Sealed class와 함께 사용하면 더욱 더 활용성이 높아진다. 뒤에서 알아보자.
+
+<br/>
+
+## B-2. 반복문 다루기
 
 ```kotlin
 
@@ -398,14 +459,5 @@ fun main() {
 
 <br/>
 
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
+## B-3. 예외 다루기
+## B-4. 함수 다루기
