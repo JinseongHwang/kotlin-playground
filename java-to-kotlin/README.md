@@ -1060,48 +1060,140 @@ class Car(
 
 <br/>
 
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
 ## C-4. object 키워드 다루기
+
+```java
+/* Java Code */
+public class JavaPerson {
+    private static final int MIN_AGE = 1;
+
+    public static JavaPerson newBaby(String name) {
+        return new JavaPerson(name, MIN_AGE);
+    }
+
+    private String name;
+    private int age;
+
+    private JavaPerson(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+```kotlin
+/* Kotlin Code */
+class Person private constructor(
+    private val name: String,
+    private val age: Int,
+) {
+    companion object {
+        private const val MIN_AGE: Int = 1
+        fun newBaby(name: String): Person {
+            return Person(name, MIN_AGE)
+        }
+    }
+}
+
+fun main() {
+    val person1 = Person.newBaby("js")
+    val person2 = Person.Companion.newBaby("js")
+}
+```
+- Java 에서는 `static`이 제공됐지만, Kotlin에서는 제공되지 않는다. 대신에 `companion object` 기능이 제공된다.
+  - `static`: 클래스가 인스턴스화 될 때 새로운 값이 복제되는게 아니라 정적으로 인스턴스끼리의 값을 공유한다는 의미이다.
+  - `companion object`: 클래스와 동행하는 유일한 오브젝트이다.
+- `val MIN_AGE = 1` 대신에 `const val MIN_AGE = 1` 을 사용한 이유는,
+  - `const` 를 사용하지 않으면 MIN_AGE에 1이 런타임에 할당된다.
+  - `const` 를 사용하면 MIN_AGE에 1이 컴파일타임에 할당된다.
+- 
+
+<br/>
+
+```kotlin
+interface Log {
+    fun log()
+}
+
+class Person2 private constructor(
+    private val name: String,
+    private val age: Int,
+) {
+    companion object Factory : Log {
+        private const val MIN_AGE: Int = 1
+        
+        fun newBaby(name: String): Person2 {
+            return Person2(name, MIN_AGE)
+        }
+
+        override fun log() {
+            println("나는 Person2 클래스의 companion object 입니다~")
+        }
+    }
+}
+
+fun main() {
+    val person1 = Person.newBaby("js")
+    val person2 = Person.Factory.newBaby("js")
+}
+```
+- Java와 달리, `companion object` 또한 하나의 객체로 간주된다.
+  - 때문에 이름도 붙일 수 있고, interface 받아서 구현할 수도 있다.
+  - 위 예시는 Log 라는 인터페이스를 상속받아서 구현한 것이다.
+- companion object의 이름을 Factory로 설정했다.
+  - 이 경우에는 `log()` 를 반드시 구현해야 한다.
+
+<br/>
+
+```java
+/* Java Code */
+public static void main(String[] args) {
+    Person.Companion.newBaby("ABC"); // without @JvmStatic
+    Person.newBaby("ABC"); // with @JvmStatic
+}
+```
+```kotlin
+/* Kotlin Code */
+class Person private constructor(
+    private val name: String,
+    private val age: Int,
+) {
+    companion object {
+        private const val MIN_AGE: Int = 1
+
+        @JvmStatic
+        fun newBaby(name: String): Person {
+            return Person(name, MIN_AGE)
+        }
+    }
+}
+```
+- Java 코드에서 Kotlin의 `companion object` 내부 프로퍼티에 `static` 처럼 `클래스.프로퍼티` 식으로 접근하고자 한다면 Kotlin 코드 쪽에 `@JvmStatic` 어노테이션을 붙여줘야 한다.
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
 ## C-5. 중첩 클래스 다루기
 ## C-6. 다양한 클래스 다루기
