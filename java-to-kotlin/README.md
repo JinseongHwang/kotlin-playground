@@ -988,21 +988,75 @@ Derived Class
 
 ## C-3. 접근 제어 다루기
 
-```kotlin
+| Java 표기 | Java 설명                | Kotlin 표기 | Kotlin 설명        |
+|-----------|------------------------|-----------|------------------|
+| public    | All opened             | public    | All opened       |
+| protected | 같은 패키지 + 하위 클래스        | protected | 선언된 클래스 + 하위 클래스 |
+| default   | 같은 패키지                 | internal  | 같은 모듈 내          |
+| private   | 선언된 클래스 내 | private   | 선언된 클래스 내        |
 
-```
+- Java와 비슷하게 Kotlin에서도 접근 제어자(Visibility Modifier)를 제공해주고 있다. 차이점 위주로 살펴보자.
+- `protected` 가 Java에서는 같은 패키지 내에서만 접근 가능했었는데, Kotlin에서는 패키지 내 접근이 불가능하게 변경됐다.
+  - Kotlin에서는 같은 패키지니까 접근 허용하게 해준다는 개념을 받아들이지 않은 것 같다.
+- `default` 역시 같은 패키지니까 접근을 허용해줬는데, 패키지 대신 모듈이라는 개념을 접근 제어자에 덧붙이며 `internal` 이라고 표기를 변경했다.
+  - 여기서 말하는 모듈은 IDEA Module, Gradle source module 등을 의미한다.
+- `public`과 `private`은 Java와 Kotlin 동일하다.
+- Java에서는 접근 제어자를 붙여주지 않으면 `default` 였는데, Kotlin에서는 `public`이 기본이다.
+- Kotlin의 `interanl`은 바이트코드 상 `public`이 된다. 때문에 Java 코드에서 Kotlin 모듈의 `internal`에 접근이 가능하다.
+- Java는 같은 패키지의 Kotlin `protected`에 접근이 가능하다.
 
 <br/>
 
 ```kotlin
-
+open class FooKotlin protected constructor(
+    val age: Int,
+    val name: String,
+)
 ```
+- 단, 예외로 생성자에 접근 제어자를 붙여주기 위해서는 `constructor`를 명시적으로 작성해야 한다.
+  - 접근 제어자가 `public`이 아니라 `protected`로 바꾸는 이유는 상속 받은 클래스에서 사용하기 위함이므로 `open` 또한 붙여준다.
+
+<br/>
+
+```java
+/* Java Code */
+public abstract class StringUtils {
+    private StringUtils() {
+    }
+
+    public boolean isDirectoryPath(String path) {
+        return path.endsWith("/");
+    }
+}
+```
+```kotlin
+/* Kotlin Code */
+fun isDirectoryPath(path: String): Boolean {
+    return path.endsWith("/")
+}
+```
+- Java에서는 유틸성 클래스를 인스턴스화 하지 못하게 하려고 private 기본 생성자를 만들어주곤 했다.
+- Kotlin에서는 클래스 없이 파일 수준에서 메서드를 만들어서 사용하면 컴파일 후 static method 처럼 사용할 수 있다.
 
 <br/>
 
 ```kotlin
-
+class Car(
+    internal val name: String,
+    private var owner: String,
+    _price: Int,
+) {
+    var price = _price
+        private set
+}
 ```
+- `internal val name: String` : name의 getter가 `internal` 수준으로 만들어진다.
+  - `val` 이기 때문에 setter는 만들어지지 않는다.
+  - Java 로 Decompile 해보면 `public`으로 나온다. 이는 Java에서 `internal` 이라는 접근 제어자가 없고, `public`으로 대체되기 때문이다.
+- `private var owner: String` : owner는 `private` 이기 때문에 getter와 setter가 만들어지지 않는다.
+- `_price: Int` : price 에 값 할당은 아래에서 다시 진행된다. 
+  - 프로퍼티 정의에 `var price` 만 있기 때문에 public getter와 setter가 생성된다.
+  - 하지만 `private set` 으로 setter만 `private`으로 변경된다. 따라서 setter는 생성되지 않는다.
 
 <br/>
 
