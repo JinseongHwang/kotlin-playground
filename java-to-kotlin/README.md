@@ -830,6 +830,7 @@ class Cat(
 - [Java code](https://github.com/JinseongHwang/kotlin-playground/blob/main/java-to-kotlin/src/main/kotlin/lec10/JavaCat.java) 와 다른 점에 대해 살펴보자.
 - 상속을 받을 때는 `extends` 가 아니라 ` : ` 을 사용한다.
   - 타입을 명시할 땐 앞에 띄어쓰기가 없는 `: ` 이었는데, 상속받을 때는 앞에 띄어쓰기가 있는 ` : ` 이 기본 컨벤션이다.
+  - 앞에 띄어쓰기를 하지 않는다고 해서 에러가 발생하지는 않는다. 그냥 컨벤션이니 지키도록 하자.
 - 상속 받음과 동시에 상위 클래스의 생성자를 호출해야 한다.
 - `@Override` 어노테이션 대신에 `override` 라는 키워드를 명시적으로 사용한다.
 
@@ -858,11 +859,165 @@ class Penguin(
 }
 ```
 - [Java code](https://github.com/JinseongHwang/kotlin-playground/blob/main/java-to-kotlin/src/main/kotlin/lec10/JavaPenguin.java) 와 다른 점에 대해 살펴보자.
-- abstract 프로퍼티가 아니라면 오버라이딩 할 때 `open` 을 붙여줘야 한다.
+- abstract 프로퍼티가 아니라면 오버라이딩 할 때 `open` 을 붙여줘야 한다. 기본적으로 모든 클래스, 프로퍼티, 함수에 `final` 이 붙어있기 때문이다.
   - `override`와 custom getter를 활용해서 getter를 오버라이딩 할 수 있다.
 - 상위 클래스에 접근하기 위해서 `super` 키워드를 사용하는 것은 Java 와 동일하다.
 - Java, Kotlin 모두 abstract class 는 인스턴스화 할 수 없다.
 
+<br/>
+
+```java
+/* Java Code */
+public interface Flyable {
+    default void act() {
+        System.out.println("파닥 파닥");
+    }
+    
+    void run();
+}
+
+```
+```kotlin
+/* Kotlin Code */
+interface Flyable {
+    fun act() {
+        println("파닥 파닥")
+    }
+    fun run()
+}
+```
+- 인터페이스 구현은 거의 비슷하다.
+  - 접근지정자는 기본이 Public 이라서 생략 가능하다.
+  - 인터페이스 내 디폴트 메서드는 별도 지정자 없이 구현하면 된다.
+  - 추상 메서드는 구현하지 않으면 된다.
+
+<br/>
+
+```kotlin
+class Penguin(
+    species: String
+) : Animal(species, 2), Swimable, Flyable {
+
+    private val wingCount: Int = 2
+
+    override fun move() {
+        println("펭귄이 움직인다~ 꽥꽥")
+    }
+
+    override val legCount: Int
+        get() = super.legCount + this.wingCount
+
+    override fun act() {
+        super<Swimable>.act()
+        super<Flyable>.act()
+    }
+}
+```
+- Swimable, Flyable 두 인터페이스를 구현하는 Penguin 클래스를 살펴보자.
+- 인터페이스 구현 또한 `implements` 키워드 대신 ` : ` 을 사용하며, 여러 개를 상속받을 경우에 `,` 로 연결한다.
+- Swimable, Flyable 둘 다 `act()` 라는 디폴트 메서드를 가지고 있는데, `override` 키워드와 `super<TYPE>.act()` 등을 통해 자유롭게 사용 가능하다.
+- Java, Kotlin 모두 interface 는 인스턴스화 할 수 없다.
+
+<br/>
+
+```kotlin
+interface Swimable {
+    val swimAbility: Int
+    fun act() = println("어푸 어푸 내 수영 능력치는 ${swimAbility}야!")
+}
+
+class Penguin(
+  species: String
+) : Animal(species, 2), Swimable, Flyable {
+    // ...
+    override val swimAbility: Int
+        get() = 5
+}
+```
+- Kotlin 에서는 Backing field 없는 프로퍼티를 인터페이스에 생성이 가능하다.
+- Swimable 인터페이스에서 상속 받는 클래스에서 swimAbility 의 getter에 대해 구현할 것이라고 믿고 사용하는 것이 가능하다.
+  - 인터페이스에서 getter 에 대해 `get() = 5` 와 같은 식으로 디폴트 메서드를 만들어줄 수도 있다.
+
+<br/>
+
+```kotlin
+open class Base(
+    open val number: Int = 100
+) {
+    init {
+        println("Base Class")
+        println(number)
+    }
+}
+
+class Derived(
+    override val number: Int
+): Base(number) {
+    init {
+        println("Derived Class")
+        println(number)
+    }
+}
+
+fun main() {
+    val obj = Derived(3)
+}
+```
+```text
+Base Class
+0
+Derived Class
+3
+```
+- 상위 클래스를 설계할 때 생성자 또는 초기화 블럭에서 사용되는 프로퍼티에서는 `open` 을 피해야 한다.
+- 출력 결과에서 100도, 3도 아닌 0이 나온 이유는 다음과 같다.
+  1. Derived 인스턴스를 생성하기 전, 상위 클래스인 Base의 인스턴스화를 먼저 시도한다.
+  2. Base 의 초기화 블럭을 실행한다.
+  3. number에 접근하고자 하는데, number는 하위 클래스인 Derived 에서 오버라이딩 예정이다.
+  4. 따라서 Base의 number 에 접근하지 못하고 Derived의 number에 접근해야 하는데 Derived는 아직 인스턴스화 되지 않았다.
+  5. Int의 기본 값인 0 이 출력되게 된다.
+  6. 추후 Derived 에서 인스턴스화가 끝나면 비로소 3이 출력된다.
+
+> final: 기본적으로 모든 클래스, 프로퍼티, 함수에 붙어있다. 즉, 상속 또는 오버라이딩을 할 수 없다.
+> open: 상속, 오버라이딩을 하고 싶다면 open 을 명시적으로 붙여줘야 한다.
+> abstract: 반드시 오버라이드를 해야 한다는 의미를 가진다.
+> override: 상위 클래스의 프로퍼티, 메서드 등을 오버라이딩 한다는 의미이다. 어노테이션이 아니라 예약어이다.
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
 
 <br/>
 
