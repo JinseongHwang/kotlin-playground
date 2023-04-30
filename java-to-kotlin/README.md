@@ -807,20 +807,62 @@ fun main() {
 ## C-2. 상속 다루기
 
 ```kotlin
-
+abstract class Animal(
+    protected val species: String,
+    protected val legCount: Int,
+) {
+    abstract fun move()
+}
 ```
+- [Java code](https://github.com/JinseongHwang/kotlin-playground/blob/main/java-to-kotlin/src/main/kotlin/lec10/JavaAnimal.java) 와 큰 차이가 아직은 보이지 않는다.
 
 <br/>
 
 ```kotlin
-
+class Cat(
+    species: String
+) : Animal(species, 4) {
+    override fun move() {
+        println("고양이가 사뿐 사뿐 걸어가~")
+    }
+}
 ```
+- [Java code](https://github.com/JinseongHwang/kotlin-playground/blob/main/java-to-kotlin/src/main/kotlin/lec10/JavaCat.java) 와 다른 점에 대해 살펴보자.
+- 상속을 받을 때는 `extends` 가 아니라 ` : ` 을 사용한다.
+  - 타입을 명시할 땐 앞에 띄어쓰기가 없는 `: ` 이었는데, 상속받을 때는 앞에 띄어쓰기가 있는 ` : ` 이 기본 컨벤션이다.
+- 상속 받음과 동시에 상위 클래스의 생성자를 호출해야 한다.
+- `@Override` 어노테이션 대신에 `override` 라는 키워드를 명시적으로 사용한다.
 
 <br/>
 
 ```kotlin
+abstract class Animal(
+    protected val species: String,
+    protected open val legCount: Int,
+) {
+    abstract fun move()
+}
 
+class Penguin(
+    species: String
+) : Animal(species, 2) {
+
+    private val wingCount: Int = 2
+
+    override fun move() {
+        println("펭귄이 움직인다~ 꽥꽥")
+    }
+
+    override val legCount: Int
+        get() = super.legCount + this.wingCount
+}
 ```
+- [Java code](https://github.com/JinseongHwang/kotlin-playground/blob/main/java-to-kotlin/src/main/kotlin/lec10/JavaPenguin.java) 와 다른 점에 대해 살펴보자.
+- abstract 프로퍼티가 아니라면 오버라이딩 할 때 `open` 을 붙여줘야 한다.
+  - `override`와 custom getter를 활용해서 getter를 오버라이딩 할 수 있다.
+- 상위 클래스에 접근하기 위해서 `super` 키워드를 사용하는 것은 Java 와 동일하다.
+- Java, Kotlin 모두 abstract class 는 인스턴스화 할 수 없다.
+
 
 <br/>
 
