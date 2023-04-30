@@ -1172,14 +1172,46 @@ class Person private constructor(
 <br/>
 
 ```kotlin
+object Singleton {
+    var a: Int = 0
+}
 
+fun main() {
+    println(Singleton.a) // 0
+    Singleton.a = 10
+    println(Singleton.a) // 10
+}
 ```
+- Java 에서는 싱글턴을 만들기 위해 여러 기법이 있었다.
+  - 상속 받을 일이 없다면 enum class 를 활용해서 싱글턴을 만드는 것이 최선의 방법이있다.
+- Kotlin 에서는 단순히 class가 아닌 object 로 클래스를 만들면 해당 객체 자체가 싱글턴이 된다.
 
 <br/>
 
-```kotlin
-
+```java
+public interface Movable {
+    void move();
+    void fly();
+}
 ```
+```kotlin
+private fun moveSomething(movable: Movable) {
+    movable.move()
+    movable.fly()
+}
+
+fun main() {
+    moveSomething(object : Movable {
+        override fun move() {
+            println("무빙 슈슈슉")
+        }
+        override fun fly() {
+            println("플라잉 파닥파닥")
+        }
+    })
+}
+```
+- Java 였다면 `new Movable() {...}` 처럼 구현했을텐데, Kotlin 에서는 `object : Movable` 처럼 구현한다.
 
 <br/>
 
