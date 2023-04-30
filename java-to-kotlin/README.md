@@ -1215,17 +1215,136 @@ fun main() {
 
 <br/>
 
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
 ## C-5. 중첩 클래스 다루기
+
+```java
+/* Java Code */
+public class JavaHouse {
+    private String address;
+    // ...
+
+    public class LivingRoom {
+        // ...
+        public String getAddress() {
+            return JavaHouse.this.address;
+        }
+    }
+}
+```
+- 잠깐 Java 얘기를 해보자.
+- Java에서는 중첩 클래스 구조를 사용할 경우, 내부 클래스에서 `JavaHouse.this.address` 로 직접 접근이 가능하다.
+  - 이는 내부 클래스인 LivingRoom 에서 외부 클래스인 JavaHouse 를 눈에 보이지 않게 참조하고 있다.
+    - Effective Java 3/E 의 Item 24, 86에 보면,
+      1. 내부 클래스는 숨겨진 외부 클래스 정보를 가지고 있어, 참조를 해지하지 못하는 경우 메모리 누수가 발생할 수 있고, 이를 디버깅 하기 어렵다.
+      2. 내부 클래스의 직렬화 형태가 명확하게 정의되지 않아 직렬화에 있어 제한이 있다.
+    - 따라서 클래스 안에 클래스를 만들 때는 static 클래스를 사용해야 한다고 조언하고 있다.
+
+<br/>
+
+```kotlin
+class House(
+    private val address: String,
+    private val livingRoom: LivingRoom
+) {
+    class LivingRoom(
+        private val area: Double
+    )
+}
+```
+- Kotlin 에서 권장하는 중첩 클래스의 모습은 그냥 `class` 를 사용하는 것이다.
+  - 기본적으로 외부 클래스에 대한 연결이 없는 내부 클래스가 중첩으로 만들어진다.
+
+<br/>
+
+```kotlin
+class House2(
+    private val address: String,
+    private val livingRoom: LivingRoom
+) {
+    inner class LivingRoom(
+        private val area: Double
+    ) {
+        val address: String
+            get() = this@House2.address
+    }
+}
+```
+- 바깥 클래스에 대한 참조를 명시적으로 가지고 있는 클래스를 만들기 위해서는 `inner class` 라고 명시적으로 알려줘야 한다.
+- 바깥 클래스의 프로퍼티에 참조하고 싶으면, `this@타입.프로퍼티` 형태로 참조할 수 있다.
+- 마찬가지로 권장되지 않는다.
+
+<br/>
+
 ## C-6. 다양한 클래스 다루기
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
