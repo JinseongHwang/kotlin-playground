@@ -17,11 +17,39 @@ class Person(
     constructor() : this("진송") {
         println("부생성자2 호출 -> 부생성자1 호출 -> 주생성자 호출")
     }
+
+    fun isAdultFun(): Boolean {
+        return this.age >= 20
+    }
+
+    val isAdultProp1: Boolean
+        get() = this.age >= 20
+
+    val isAdultProp2: Boolean
+        get() {
+            return this.age >= 20
+        }
+
+    var myAge: Int
+        get() {
+            return this.age
+        }
+        set(value) {
+            this.age += value * 10
+        }
 }
 
 fun main() {
     val person = Person("진성", 100)
     println(person.name)
-    person.age = 10
+//    person.age = 10
     println(person.age)
+
+    println(person.isAdultFun())
+    println(person.isAdultProp1)
+
+    println("===== myAge =====")
+    println(person.myAge)
+    person.myAge = 3
+    println(person.myAge)
 }

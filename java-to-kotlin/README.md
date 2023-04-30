@@ -690,72 +690,164 @@ class Person(
 }
 ```
 - 부생성자를 사용하는 것은 복잡하기 때문에 권장되지 않는다.
-- Default Parameter를 사용하는 것이 권장된다.
+- Kotlin에서는 기본적으로 Default Parameter를 사용하는 것을 권장한다.
 - 불가피하게 부생성자를 사용해야 한다면, 정적 팩터리 메서드로 해결하자.
 
 <br/>
 
 ```kotlin
+class Person(
+    val name: String = "진송",
+    var age: Int = 1,
+) {
+    fun isAdultFun(): Boolean {
+        return this.age >= 20
+    }
 
+    val isAdultProp1: Boolean
+        get() = this.age >= 20
+
+    var myAge: Int
+        get() {
+            return this.age
+        }
+        set(value) {
+            this.age += value * 10
+        }
+}
+
+fun main() {
+    val person = Person("진성", 100)
+    println(person.isAdultFun()) // false
+    println(person.isAdultProp1) // false
+
+    println(person.myAge) // 100
+    person.myAge = 3 // set: this.age += 3 * 10
+    println(person.myAge) // 130
+}
 ```
+```java
+/* De-complied Java Code */
+public final boolean isAdultFun() {
+    return this.age >= 20;
+}
+
+public final boolean isAdultProp1() {
+    return this.age >= 20;
+}
+
+public final int getMyAge() {
+    return this.age;
+}
+
+public final void setMyAge(int value) {
+    this.age += value * 10;
+}
+```
+- 20살 이상이면 성인으로 판단하는 `isAdult` 메서드를 2가지 방식으로 만들어보자.
+  - 첫 번째 방식인 `isAdultFun()` 은 함수 형태로 만든 것이고, `isAdultProp` 은 프로퍼티 형태로 만든 것이다.
+  - `isAdultFun()` 은 함수와 같으므로 `person.isAdultFun()` 처럼 호출해야 한다.
+  - `isAdultProp` 은 프로퍼티와 같으므로 `person.isAdultProp` 처럼 호출해야 한다.
+  - Decompile 된 Java 코드를 보면 생성된 메서드는 서로 동일한 것으로 확인된다. Kotlin에서 제공해주는 Syntax sugar라고 생각하자.
+- 내 맘대로 age를 `get()`, `set()` 하는 메서드를 프로퍼티 형태로 만들어보자.
+  - 프로퍼티 이름은 `myAge` 로 설정했다.
+  - `get()` 을 호출하면 곧바로 현재 age 값을 반환하도록 했다.
+  - `set(value)` 을 호출하면 value 에 10을 곱해서 age에 대입하도록 했다.
+  - Decompile 된 Java 코드를 보면 getter와 setter를 만들어 준 것을 확인할 수 있다.
+- 언제 함수 형태로 써야 하고, 프로퍼티 형태로 써야 할까?
+  - 어떤 객체 인스턴스의 프로퍼티 처럼 접근해야 하는 명확한 형태라면 프로퍼티 형태로 작성하면 되고,
+    - 예를 들어 기존 프로퍼티를 활용해서 새로운 프로퍼티를 만들어야 하는 경우 (age를 활용해서 10대인지 판별하는 `person.isTeenager`)
+  - 그 외의 경우 함수 형태로 작성하면 된다.
+    - 예를 들어 특정 행위, 동작 등을 정의해야 하는 경우
 
 <br/>
 
 ```kotlin
+class Person2(
+    name: String = "jinseong",
+    var age: Int = 1,
+) {
+    val name = name
+        get() = field.uppercase()
+}
 
+fun main() {
+    val person = Person2()
+    println(person.name)
+}
 ```
+- Custom getter를 만들어서 사용하는 방법에 대해 알아보자.
+- 클래스의 생성자에서 프로퍼티 정의하는 `val` 을 빼고 아래에서 따로 정의해줬다. 그 아래에서 getter를 정의해보자.
+  - 1차원적으로 생각해보면 `get() = this.name.uppercase()` 를 하면 동작할 것만 같다.
+  - 하지만 동작하지 않는다. 컴파일 에러가 발생한다.
+  - `this.name` 자체가 getter 를 호출하게 되는데, `get()` 을 타고 들어가면 다시 `this.name` 을 호출하기 때문에 순환 참조가 발생한다.
+  - 따라서 Kotlin에서는 `field` 라는 예약어를 제공해준다. Backing field 라고 불린다.
 
 <br/>
 
 ```kotlin
+class Person3(
+    val name: String = "jinseong",
+    var age: Int = 1,
+) {
+    val uppercaseName: String
+        get() = this.name.uppercase()
+}
 
+fun main() {
+    val person = Person3()
+    println(person.uppercaseName)
+}
 ```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
+- Backing field 를 사용하는 방식 또한 좋지만, 실제로는 잘 사용되지 않는다고 한다.
+- 새로운 프로퍼티를 만드는 식으로 정의하면 더 간단하고 사용하기 쉽다.
 
 <br/>
 
 ## C-2. 상속 다루기
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
 ## C-3. 접근 제어 다루기
 ## C-4. object 키워드 다루기
 ## C-5. 중첩 클래스 다루기
