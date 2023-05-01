@@ -1492,70 +1492,144 @@ val list3: List<Int?>?
 ## D-3. 다양한 함수 다루기
 
 ```kotlin
+fun String.lastChar(): Char {
+    return this[this.length - 1]
+}
 
+fun main() {
+    val str = "ABC"
+    val lastChar = str.lastChar()
+    println(lastChar) // C
+}
 ```
+- `fun 확장하려는클래스.함수이름(파라미터)` 를 활용해서 기존에 존재하는 클래스에 확장해서 메서드를 만들 수 있다.
+- 확장함수는 기존 클래스에 존재하는 멤버처럼 보이게 하는 기능이다. 하지만 이 기능을 활용해서 기존 클래스의 캡슐화를 깨뜨릴 수는 없다.
+  - 기존 함수에 있던 private, protected 멤버는 확장 함수에서 접근이 불가능하다는 의미이다.
+- 기존 클래스의 함수 이름과 외부에서 구현된 확장 함수의 이름이 같다면 호출 시 어떤 걸 호출하게 될까?
+  - 기존 클래스에 있는 함수가 더 높은 우선순위를 갖는다.
+  - 하지만 확장 함수가 먼저 구현되어 있었는데, 기존 클래스에 함수를 추가하는 경우에는 오작동을 유발할 수 있으므로 조심해야 한다.
 
 <br/>
 
 ```kotlin
+open class Train(
+    val name: String = "새마을기차",
+    val price: Int = 5_000,
+)
 
+fun Train.isExpensive(): Boolean {
+    println("Train의 확장함수")
+    return this.price >= 10_000
+}
+
+class Srt : Train("SRT", 40_000)
+
+fun Srt.isExpensive(): Boolean {
+    println("Srt의 확장함수")
+    return this.price >= 10_000
+}
+
+fun main() {
+    val train : Train = Train()
+    train.isExpensive() // Train의 확장함수
+
+    val srt1 : Train = Srt()
+    srt1.isExpensive() // Train의 확장함수
+
+    val srt2 : Srt = Srt()
+    srt2.isExpensive() // Srt의 확장함수
+}
 ```
+- 확장 함수가 오버라이딩 되면 정적인 타입에 의존된다.
+- 실제 런타임에 어떤 타입이 들어가냐 보단, 코드 상으로 어떤 타입으로 결정되는지가 어떤 함수를 부를지 결정한다.
+- 이 방식은 오해를 불러 일으킬 여지가 있어 보이기 때문에 실제로 사용하는 것은 좋아보이지 않는다.
 
 <br/>
 
 ```kotlin
+fun String.lastChar(): Char {
+    return this[this.length - 1]
+}
 
+val String.lastChar: Char
+    get() = this[this.length - 1]
 ```
+- 확장 함수 역시 확장 프로퍼티 형태로도 사용 가능하다.
+
+<br/>
+
+```java
+String str = "Hello World";
+System.out.println(StringUtilsKt.lastChar(str)); // d
+```
+- Java 에서 Kotlin의 확장 함수를 가져다 사용할 경우 static 함수처럼 가져다 사용할 수 있다.
 
 <br/>
 
 ```kotlin
+fun Int.add(other: Int): Int {
+    return this + other
+}
 
+infix fun Int.add2(other: Int): Int {
+    return this + other
+}
+
+fun main() {
+    println(3.add(4))
+    println(3.add2(4))
+    println(3 add2 4)
+}
 ```
+- `변수.함수이름(파라미터)` 와 같이 함수를 호출하지만, `infix` 가 붙은 함수는 `변수 함수이름 파라미터` 식으로 함수 호출도 허용한다.
 
 <br/>
 
 ```kotlin
+inline fun Int.add3(other: Int): Int {
+    return this + other
+}
 
+fun main() {
+    println(3.add3(4))
+}
 ```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
+- 함수가 호출되는 대신, 함수를 호출한 지점에 함수 본문을 그대로 복붙하고 싶은 경우에 `inline` 함수를 사용한다.
+- 함수를 파라미터로 전달할 때 오버헤드를 줄일 수 있다.
+- 하지만 너무 많이 쓰면 좋지 않을 수 있다. 성능 측정과 함께 신중하게 사용해야 한다.
 
 <br/>
 
 ## D-4. 람다 다루기
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
 ## D-5. 컬렉션을 함수형으로 다루기
