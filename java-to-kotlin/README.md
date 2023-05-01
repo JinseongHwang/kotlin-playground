@@ -1278,32 +1278,89 @@ class House2(
 ## C-6. 다양한 클래스 다루기
 
 ```kotlin
-
+data class PersonDto(
+    val name: String,
+    val age: Int,
+)
 ```
+- Java에서 DTO를 만들면 필드 뿐만 아니라 부가적으로 생성자, getter, `equals()`, `hashCode()`, `toString()` 등을 함깨 구현해야 한다.
+  - Lombok의 도움을 받거나 IDE의 도움을 받아서 처리할 수도 있지만, 불편한 것임에는 틀림 없다.
+- Kotlin에서는 `data class` 를 사용하면 부가적인 코드 없이 위 필요한 모든 것들이 자동으로 생성된다.
+  - 위 예시 코드는 장황한 [Java 코드](https://github.com/JinseongHwang/kotlin-playground/blob/main/java-to-kotlin/src/main/kotlin/lec14/JavaPersonDto.java) 와 완전 동일하다.
+- `data class` 에 named parameter 기능까지 사용한다면 builder, equals, hashCode, toString 모두 생성된 것 처럼 누릴 수 있다.
 
 <br/>
 
 ```kotlin
-
+enum class Country(
+    private val code: String
+) {
+    KOREA("KO"),
+    AMERICA("US"),
+    ;
+}
 ```
+- `enum class` 구현 방법은 Java와 거의 동일하다.
+
+<br/>
+
+```java
+/* Java Code */
+private static void handleCountry(JavaCountry country) {
+    if (country == JavaCountry.KOREA) {
+        // 로직 처리
+    }
+    if (country == JavaCountry.AMERICA) {
+        // 로직 처리
+    }
+}
+```
+```kotlin
+/* Kotlin Code */
+fun handleCountry(country: Country) {
+    when (country) {
+        Country.KOREA -> TODO()
+        Country.AMERICA -> TODO()
+    }
+}
+```
+- `enum class`의 필드에 따라 분기하는 로직이 있다고 가정하자.
+- Country 라는 `enum class` 에 KOREA, AMERICA 이외의 다른 필드가 생긴다면, `when` 구문에서 컴파일 에러가 발생한다.
+- `enum class` 와 `when` 을 조합하면 Java에서는 잡아내지 못하는 오류를 컴파일 타임에 잡아낼 수 있다.
 
 <br/>
 
 ```kotlin
+sealed class HyundaiCar(
+    val name: String,
+    val price: Long,
+)
 
+class Avante : HyundaiCar("아반떼", 1_000L)
+class Sonata : HyundaiCar("소나타", 2_000L)
+class Grandeur : HyundaiCar("그랜져", 3_000L)
 ```
+- 봉인된 클래스 라는 기능을 가진 `sealed class`가 Kotlin에 추가되었다. (`sealed interface`도 있다!)
+- 상속이 가능하도록 추상 클래스를 만들고 싶은데, 외부에서는 이 클래스를 상속받지 못하게 할 때 `sealed class`를 사용한다.
+- 3가지 특징이 있다. 
+  1. 컴파일 타임에 하위 클래스의 타입을 모두 기억한다. 즉, 런타임에 클래스 타입이 추가될 수 없다.
+  2. 하위 클래스는 같은 패키지 안에 있어야 한다. 
+  3. `enum class`와 달리, 클래스를 상속받을 수 있고, 하위 클래스는 멀티 인스턴스가 가능하다.
 
 <br/>
 
 ```kotlin
-
+fun handleCar(car: HyundaiCar) {
+    when (car) {
+        is Avante -> TODO()
+        is Grandeur -> TODO()
+        is Sonata -> TODO()
+    }
+}
 ```
-
-<br/>
-
-```kotlin
-
-```
+- `sealed class` 역시 `enum class` 처럼 컴파일 타임에 타입을 모두 알고 있다.
+- 따라서 컴파일 타임에 특정한 하위 클래스가 빠졌다면, 컴파일 에러를 발생시키며 개발자의 실수를 줄일 수 있다.
+  - 예를 들어 위 코드에서 `is Sonata -> TODO()` 를 추가했다가 실수로 작성하지 않았다면, 컴파일 에러가 발생한다.
 
 <br/>
 
