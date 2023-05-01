@@ -1393,9 +1393,21 @@ fun handleCar(car: HyundaiCar) {
 
 ## D-1. 배열과 컬렉션 다루기
 
-```kotlin
-
+```java
+/* Java Code */
+int[] array = {100, 200};
+for (int i = 0; i < array.length; i++) {
+    System.out.printf("%s %s\n", i, array[i]);
+}
 ```
+```kotlin
+val array = arrayOf(100, 200)
+for (i in array.indices) {
+    println("${i} ${array[i]}")
+}
+```
+- `arrayOf` 를 사용해서 배열을 생성할 수 있다.
+- `array.indices` 를 사용하면 배열의 index range를 반환한다.
 
 <br/>
 
