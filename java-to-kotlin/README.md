@@ -4,30 +4,6 @@
 > README 에는 강의에서 설명한 내용, 여러 문서들, 제 생각이 섞여 있습니다.  
 > ~저도 사람이기 때문에~ 정확하지 않은 정보가 있을 수 있습니다.  
 
-<!-- TOC -->
-* [A. 코틀린에서 변수와 타입, 연산자를 다루는 방법](#a-코틀린에서-변수와-타입-연산자를-다루는-방법)
-  * [A-1. var과 val 다루기](#a-1-var과-val-다루기)
-  * [A-2. null 다루기](#a-2-null-다루기)
-  * [A-3. 타입 다루기](#a-3-타입-다루기)
-  * [A-4. 연산자 다루기](#a-4-연산자-다루기)
-* [B. 코틀린에서 코드를 제어하는 방법](#b-코틀린에서-코드를-제어하는-방법)
-  * [B-1. 제어문 다루기](#b-1-제어문-다루기)
-  * [B-2. 반복문 다루기](#b-2-반복문-다루기)
-  * [B-3. 예외 다루기](#b-3-예외-다루기)
-  * [B-4. 함수 다루기](#b-4-함수-다루기)
-* [C. 코틀린에서 OOP](#c-코틀린에서-oop)
-  * [C-1. 클래스 다루기](#c-1-클래스-다루기)
-  * [C-2. 상속 다루기](#c-2-상속-다루기)
-  * [C-3. 접근 제어 다루기](#c-3-접근-제어-다루기)
-  * [C-4. object 키워드 다루기](#c-4-object-키워드-다루기)
-  * [C-5. 중첩 클래스 다루기](#c-5-중첩-클래스-다루기)
-  * [C-6. 다양한 클래스 다루기](#c-6-다양한-클래스-다루기)
-* [D. 코틀린에서 FP](#d-코틀린에서-fp)
-  * [D-1. 배열과 컬렉션 다루기](#d-1-배열과-컬렉션-다루기)
-  * [D-2. 다양한 함수 다루기](#d-2-다양한-함수-다루기)
-  * [D-3. 람다 다루기](#d-3-람다-다루기)
-  * [D-4. 컬렉션을 함수형으로 다루기](#d-4-컬렉션을-함수형으로-다루기)
-<!-- TOC -->
 
 # A. 코틀린에서 변수와 타입, 연산자를 다루는 방법
 
@@ -1391,7 +1367,7 @@ fun handleCar(car: HyundaiCar) {
 
 # D. 코틀린에서 FP
 
-## D-1. 배열과 컬렉션 다루기
+## D-1. 배열 다루기
 
 ```java
 /* Java Code */
@@ -1408,8 +1384,112 @@ for (i in array.indices) {
 ```
 - `arrayOf` 를 사용해서 배열을 생성할 수 있다.
 - `array.indices` 를 사용하면 배열의 index range를 반환한다.
+  - `0..1` 값을 가지는 IntRange 객체를 반환한다.
 
 <br/>
+
+```kotlin
+val array = arrayOf(100, 200)
+for ((idx, value) in array.withIndex()) {
+    println("${idx} ${value}")
+}
+```
+- 배열을 순회하며 index와 value를 한번에 꺼내올 수 있는 방법이 있다.
+- `array.withIndex()` 를 쓰면 되는데, `IndexingIterable` 객체를 반환한다.
+
+<br/>
+
+## D-2. 컬렉션 다루기
+
+- Kotlin에서는 Collection을 선언하기 전 가변(Mutable)인지 불변(Immutable)인지 먼저 결정해야 한다.
+  - Mutable collection : collection에 element를 추가,삭제 할 수 있다.
+  - Immutable collection : collection에 element를 추가,삭제 할 수 없다.
+- 기본적으로 List, Set, Map 을 만들어서 사용하면 모두 Immutable collection이다.
+  - Mutable collection을 사용하려면 MutableList, MutableSet, MutableMap 을 사용해야 한다.
+  - 일반적으로 Immutable collection을 사용하도록 하고, 꼭 필요한 경우에만 Mutable collection을 사용하도록 하자.  
+- Java 에서는 Mutable과 Immutable을 구분하지 않는다. 따라서 고려해야 할 점은,
+  - Kotlin에서 Immutable collection으로 작성된 자료구조가 Java 코드 쪽에 가서 수정될 수도 있다.
+  - Immutable 임에도 Java 코드와 함께 쓰인다면 수정될 가능성을 열어두고 개발하자.
+- Java 에서는 nullable과 non-nullable을 구분하지 않는다. 따라서 고려해야 할 점은,
+  - Kotlin에서 non-nullable로 작성된 자료구조가 Java 코드 쪽에 가서 null이 들어갈 수도 있다.
+  - non-nullable 임에도 Java 코드와 함께 쓰인다면 null이 저장될 가능성을 열어두고 개발하자.
+- Kotlin 쪽의 컬렉션이 Java에서 호출되면 컬렉션 내용이 변할 수 있음을 감안해야 한다.
+  - Kotlin 쪽에서 Java 코드와 주고받을 일이 있다면 `Collections.unmodifiableXXX()` 를 활용하면 변경 자체를 막을 수 있다.
+  - 그리고 플랫폼 타입과 마찬가지로 Java와 주고받는 지점을 단 하나로 만들어서 오류 발생 시 영향 범위를 최소화 하는 것이 좋다.
+
+```kotlin
+val numbers = listOf(100, 200) // Int 라고 적지 않아도 추론 가능하기 때문에 생략함.
+val emptyList = emptyList<Int>() // 어떤 값이 들어갈지 모르기 때문에 타입 명시 해줘야 함.
+val mutableNumbers = mutableListOf(300, 400) // Mutable List 생성
+mutableNumbers.add(500) // mutable 이기 때문에 add 가능
+
+for (number in numbers) {
+    println(number)
+}
+
+for ((idx, value) in numbers.withIndex()) {
+    println("$idx : $value")
+}
+```
+- `listOf<>()`, `mutableListOf<>()` 를 사용해서 List를 생성할 수 있다.
+- Mutable List에서만 `add()` 등의 연산이 가능하다.
+- 순회 하는 방법은 배열과 동일하다.
+
+<br/>
+
+```kotlin
+val numbers = setOf(100, 200)
+val mutableNumbers = mutableSetOf(300, 400) // LinkedHashSet
+
+for (number in numbers) {
+    println(number)
+}
+
+for ((idx, number) in numbers.withIndex()) {
+    println("$idx : $number")
+}
+```
+- `setOf<>()`, `mutableSetOf<>()` 를 사용해서 Set을 생성할 수 있다.
+
+<br/>
+
+```kotlin
+val oldMap = mutableMapOf<Int, String>()
+oldMap.put(1, "Monday") // 방법1
+oldMap[2] = "Tuesday" // 방법2
+
+val map = mapOf(
+    1 to "Monday", 
+    2 to "Tuesday",
+)
+
+for (key in map.keys) {
+    println("$key : ${map[key]}")
+}
+
+for ((k, v) in map.entries) {
+    println("$k : $v")
+}
+```
+- `mapOf<>()`, `mutableMapOf<>()` 를 사용해서 Map을 생성할 수 있다.
+- `mutableMapOf<>()` 을 사용하는 경우에는 `put()` 또는 `[]` 연산자를 통해 값을 저장할 수 있다.
+- `mapOf<>()` 을 사용하는 경우에는 중위 호출 `to`를 사용해서(Pair 객체) 깔끔하게 값을 미리 저장할 수 있다.
+- `map.keys` 혹은 `map.entries` 를 활용해서 Map을 순회할 수 있다.
+
+<br/>
+
+```kotlin
+val list1: List<Int?>
+val list2: List<Int>?
+val list3: List<Int?>?
+```
+- `List<Int?>` : List에 null이 들어갈 수 있지만 List 자체는 절대 null이 아님.
+- `List<Int>?` : List에 절대 null이 들어갈 수 없지만 List 자체는 null 일 수 있음.
+- `List<Int?>?` : List에 null이 들어갈 수 있고, List 자체도 null일 수 있음.
+
+<br/>
+
+## D-3. 다양한 함수 다루기
 
 ```kotlin
 
@@ -1447,6 +1527,35 @@ for (i in array.indices) {
 
 <br/>
 
-## D-2. 다양한 함수 다루기
-## D-3. 람다 다루기
-## D-4. 컬렉션을 함수형으로 다루기
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+## D-4. 람다 다루기
+## D-5. 컬렉션을 함수형으로 다루기
