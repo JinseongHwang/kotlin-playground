@@ -1602,9 +1602,36 @@ fun main() {
 
 ## D-4. 람다 다루기
 
-```kotlin
+```java
+public static void main(String[] args) {
+    List<Fruit> fruits = Arrays.asList(...);
+    List<Fruit> filtered1 = filterFruitsInterface(fruits, fruit -> fruit.getName().equals("사과"));
+    List<Fruit> filtered2 = filterFruitsStream(fruits, fruit -> fruit.getName().equals("사과"));
+    List<Fruit> filtered3 = filterFruitsStream(fruits, Fruit::isApple);
+}
 
+private static List<Fruit> filterFruitsInterface(List<Fruit> fruits, Predicate<Fruit> fruitFilter) {
+    List<Fruit> results = new ArrayList<>();
+    for (Fruit fruit : fruits) {
+        if (fruitFilter.test(fruit)) {
+            results.add(fruit);
+        }
+    }
+    return results;
+}
+
+private static List<Fruit> filterFruitsStream(List<Fruit> fruits, Predicate<Fruit> fruitFilter) {
+    return fruits.stream()
+                 .filter(fruitFilter)
+                 .collect(Collectors.toList());
+}
 ```
+- 잠깐 Java 얘기를 먼저 하고 넘어가자.
+- Java에서는 현실의 복잡한 요구사항을 깔끔하게 해결하기 위해 람다와 같은 개념이 등장했다.
+- JDK 8 이후부터 람다, 스트림이 도입되며 코드를 요구사항에 맞게 깔끔하게 수정하는 것이 가능하다.
+- `filtered3` 처럼 `Predicate`와 같은 함수형 인터페이스와 메서드 레퍼런스 기능을 활용하면 마치 함수를 매개변수로 넘기는 것 처럼 작성하는 것이 가능하다.
+- Java에서는 함수가 2급시민으로 취급되기 때문에 함수 자체를 변수에 할당하거나 파라미터로 전달하는 것이 언어 차원에서 불가능했다.
+- 하지만 Kotlin에서는 함수가 1급시민, Expression으로 취급되기 때문에 변수에 할당하거나 파라미터로 전달하는 것이 가능해졌다.
 
 <br/>
 
