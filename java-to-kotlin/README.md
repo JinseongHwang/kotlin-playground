@@ -1636,6 +1636,134 @@ private static List<Fruit> filterFruitsStream(List<Fruit> fruits, Predicate<Frui
 <br/>
 
 ```kotlin
+val isApple1 = fun(fruit: KoFruit): Boolean {
+    return fruit.name == "사과"
+}
+val isApple2 = { fruit: KoFruit -> fruit.name == "사과" }
+
+println(isApple1(fruits[0]))
+println(isApple1.invoke(fruits[0]))
+println(isApple2(fruits[0]))
+println(isApple2.invoke(fruits[0]))
+```
+- Kotlin에서는 이름 없는 함수인 람다 함수를 만드는 방법이 2가지가 있다.
+  1. 변수 자체에 fun 키워드로 함수를 할당하는 방법이다. 함수 이름은 없고, 나머진 일반 함수와 동일하다.
+  2. 중괄호와 화살표 연산자로 파라미터와 본문을 구분해서 람다 함수를 작성 후 변수에 할당하는 방법이다.
+- 호출할 때는 일반 함수와 동일하게 호출 가능하며, `.invoke()`를 통해서도 호출 가능하다.
+
+<br/>
+
+```kotlin
+val isApple1: (KoFruit) -> Boolean = fun(fruit: KoFruit): Boolean {
+    return fruit.name == "사과"
+}
+val isApple2: (KoFruit) -> Boolean = { fruit: KoFruit -> fruit.name == "사과" }
+```
+- 함수의 파라미터 타입과 리턴 타입을 넣고 싶으면 위 예시처럼 넣을 수 있다.
+
+<br/>
+
+```kotlin
+fun main() {
+    val fruits = listOf(...)
+
+    val isApple1: (KoFruit) -> Boolean = fun(fruit: KoFruit): Boolean {
+        return fruit.name == "사과"
+    }
+    val isApple2: (KoFruit) -> Boolean = { fruit: KoFruit -> fruit.name == "사과" }
+
+    val filtered1 = filterFruits(fruits, isApple1)
+    val filtered2 = filterFruits(fruits, isApple2)
+    val filtered3 = filterFruits(fruits, { fruit: KoFruit -> fruit.name == "사과" })
+    val filtered4 = filterFruits(fruits) { fruit: KoFruit -> fruit.name == "사과" }
+    val filtered5 = filterFruits(fruits) { fruit -> fruit.name == "사과" }
+    val filtered6 = filterFruits(fruits) { it.name == "사과" }
+}
+
+private fun filterFruits(
+    fruits: List<KoFruit>, filter: (KoFruit) -> Boolean
+): List<KoFruit> {
+    val results = mutableListOf<KoFruit>()
+    for (fruit in fruits) {
+        if (filter(fruit)) {
+            results.add(fruit)
+        }
+    }
+    return results
+}
+```
+- `filterFruits()` 함수에서 볼 수 있듯, 함수 자체를 파라미터로 넘겨주는 것이 가능하다.
+- `filtered1 ~ 6` 까지 모두 동일한 기능을 한다. 어떻게 가능한지 하나씩 알아보자.
+  1. `filtered1`: 가장 일반적인 방법이다.
+  2. `filtered2`: 화살표 연산자를 활용한 람다 함수도 파라미터로 사용이 가능하다.
+  3. `filtered3`: 변수 할당 전, 함수 그 자체를 담아도 잘 동작한다.
+  4. `filtered4`: 호출하는 함수의 마지막 파라미터가 함수 타입이라면 소괄호 밖에서 중괄호를 작성해도 잘 동작한다.
+  5. `filtered5`: 호출하는 함수 쪽의 파라미터 타입이 명시되어 있기 때문에 타입 추론이 가능하다. 전달하는 파라미터 함수 안의 타입 제거가 가능하다.
+  6. `filtered6`: 전달하는 함수의 파라미터가 단 하나라면 `it` 라는 예약어로 간소화 가능하다. 예를 들어 `a -> a.name` 와 같은 매핑 함수가 있다고 했을 때 `it.name` 으로 간소화 가능하다.
+
+<br/>
+
+```kotlin
+// Closeable.kt 파일 일부
+public inline fun <T : Closeable?, R> T.use(block: (T) -> R): R { ... }
+```
+```kotlin
+fun readFile(path: String) {
+    BufferedReader(FileReader(path)).use { reader ->
+        for (line in reader.lines()) {
+            println(line)
+        }
+    }
+}
+```
+- `Closeable.kt` 파일 구현 일부를 보며 아래 `readFile()`의 `use()`가 어떻게 가능한지 알아보자.
+1. `BufferedReader`는 `Closeable`을 상속받고 있다.
+2. `<T : Closeable?, R> T.use` 를 보면 알 수 있듯, `use()`는 `Closeable`을 구현한 `T`의 확장 함수이다.
+3. `use(block: (T) -> R)` 를 보면 알 수 있듯, 받는 파라미터가 `(T) -> R` 타입의 함수이다.
+    - 람다 함수를 받도록 만들어진 함수이다.
+    - 단 하나의 파라미터, 즉, 마지막 파라미터가 함수 타입이기 때문에 소괄호 밖에서 중괄호로 전달할 함수 작성이 가능하다.
+4. T=`FileReader`, R=`Unit` 이란 것을 추론할 수 있다.
+
+<br/>
+
+## D-5. Closure 알아보기
+
+```java
+/* Java Code */
+String targetFruitName = "바나나";
+targetFruitName = "수박";
+filterFruits(fruits, (fruit) -> targetFruitName.equals(fruit,getName()));
+```
+```kotlin
+/* Kotlin Code */
+var targetFruitName = "바나나"
+targetFruitName = "수박"
+filterFruits(fruits) { it.name == targetFruitName }
+```
+- 위 Java 코드를 실행하면 컴파일 시점에 아래와 같은 오류가 발생한다.
+  - Variable used in lambda expression should be final or effectively final.
+  - final 변수거나 실질적으로 final 인 변수만 람다 내부에서 참조 가능하다는 의미이다.
+- 하지만 Kotlin 코드는 실행하면 잘 동작한다.
+  - Kotlin은 람다 함수가 시작하는 시점에 참조하고 있는 변수들을 모두 포획하여 그 정보를 가지고 있기 때문이다.
+  - 즉, 임시적으로 사용할 복사본을 만들어서 내부적으로 저장해두고 참조한다는 의미와 같다.
+  - 이렇게 동작하는 방식의 데이터 구조를 Closure라고 한다.
+
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
 
 ```
 
@@ -1659,4 +1787,10 @@ private static List<Fruit> filterFruitsStream(List<Fruit> fruits, Predicate<Frui
 
 <br/>
 
-## D-5. 컬렉션을 함수형으로 다루기
+```kotlin
+
+```
+
+<br/>
+
+## D-6. 컬렉션을 함수형으로 다루기
