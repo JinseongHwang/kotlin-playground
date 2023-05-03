@@ -1404,8 +1404,8 @@ for ((idx, value) in array.withIndex()) {
 - Kotlin에서는 Collection을 선언하기 전 가변(Mutable)인지 불변(Immutable)인지 먼저 결정해야 한다.
   - Mutable collection : collection에 element를 추가,삭제 할 수 있다.
   - Immutable collection : collection에 element를 추가,삭제 할 수 없다.
-- 기본적으로 List, Set, Map 을 만들어서 사용하면 모두 Immutable collection이다.
-  - Mutable collection을 사용하려면 MutableList, MutableSet, MutableMap 을 사용해야 한다.
+- 기본적으로 `List`, `Set`, `Map` 을 만들어서 사용하면 모두 Immutable collection이다.
+  - Mutable collection을 사용하려면 `MutableList`, `MutableSet`, `MutableMap` 을 사용해야 한다.
   - 일반적으로 Immutable collection을 사용하도록 하고, 꼭 필요한 경우에만 Mutable collection을 사용하도록 하자.  
 - Java 에서는 Mutable과 Immutable을 구분하지 않는다. 따라서 고려해야 할 점은,
   - Kotlin에서 Immutable collection으로 작성된 자료구조가 Java 코드 쪽에 가서 수정될 수도 있다.
