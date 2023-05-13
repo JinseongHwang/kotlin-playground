@@ -1875,7 +1875,7 @@ typealias USGTMap = Map<String, UltraSuperGuardianTribe>
 ```
 - 이름이 긴 클래스를 collection에서 사용할 때도 축약하는 용도로 사용하면 좋다.
 
-<br/>
+<br/
 
 ## F-2. as import
 
@@ -1909,24 +1909,59 @@ fun main() {
 
 <br/>
 
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
 ## F-3. 구조분해와 componentN 함수
+
+```kotlin
+data class Person(
+    val name: String,
+    val age: Int,
+)
+
+fun main() {
+    val person = Person("jinseong", 20)
+    val (name, age) = person
+    println("이름 = $name / 나이 = $age") // 이름 = jinseong / 나이 = 20
+}
+```
+- 마법같이 `name`과 `age`에 적절한 값이 분해되어 할당된다. 이런 문법을 보고 구조분해 문법이라고 부른다.
+- `data class` 에는 componentN 함수도 자동으로 생성해주는데, componentN 함수를 사용해서 동작한다.
+- 프로퍼티 순서에 의존해서 동작하기 때문에, 추후 변경 가능성이 있는 클래스라면 조심해서 사용하자.
+
+<br/>
+
+```kotlin
+// val (name, age) = person
+val name = person.component1() 
+val age = person.component2()
+```
+- person 객체에 가지고 있는 첫번째 프로퍼티가 `component1()`을 호출하면 반환된다. N번째 프로퍼티는 `componentN()` 을 호출하면 된다.
+
+<br/>
+
+```kotlin
+class Person2(
+    val name: String,
+    val age: Int,
+) {
+    operator fun component1(): String {
+        return this.name
+    }
+
+    operator fun component2(): Int {
+        return this.age
+    }
+}
+
+fun main() {
+    val person = Person2("jinseong", 1000)
+    val (name, age) = person
+    println("이름 = $name / 나이 = $age") // 이름 = jinseong / 나이 = 1000
+}
+```
+- `data class`가 아니라면 직접 componentN 함수를 구현해서 사용할 수 있다.
+- 단, 연산자 오버로딩으로 간주되기 때문에 앞에 `operator` 키워드를 붙여줘야 한다.
+
+<br/>
+
 ## F-4. Jump와 Label
 ## F-5. TakeIf와 TakeUnless
