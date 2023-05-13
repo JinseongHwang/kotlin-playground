@@ -1964,4 +1964,102 @@ fun main() {
 <br/>
 
 ## F-4. Jump와 Label
+
+```kotlin
+val numbers = listOf(1, 2, 3, 4)
+    numbers.map { it + 1 }
+        .forEach { println(it) }
+```
+- 일반적으로 코드의 흐름을 제어할 때, `return`, `break`, `continue` 를 사용한다.
+- 하지만 Kotlin의 `forEach()`를 사용하는 도중에는 `break`과 `continue`를 사용할 수 없다.
+
+<br/>
+
+```kotlin
+val numbers = listOf(1, 2, 3, 4)
+run {
+    numbers.forEach {number ->
+        if (number == 2) {
+            println("continue")
+            return@forEach
+        }
+        if (number == 3) {
+            println("break")
+            return@run
+        }
+        println(number)
+    }
+}
+```
+```text
+1
+continue
+break
+```
+- `forEach()`를 사용하는 도중에 `break`과 `continue`를 사용하고 싶다면 `run{}` 블럭으로 감싸줘야 한다.
+- `return@run` 이 `break` 역할을 수행하고, `return@forEach` 이 `continue` 역할을 수행한다.
+- 복잡하고 가독성이 떨어지기 때문에 break 혹은 continue를 사용해야 할 일이 있다면 일반적인 for 문을 사용하는 것을 추천한다.
+
+<br/>
+
+```kotlin
+out_loop@ for (i in 1..10) {
+    for (j in 1..3) {
+        if (j == 2) {
+            break@out_loop
+        }
+        println("$i $j")
+    }
+}
+```
+```text
+1 1
+```
+- Kotlin에서는 Label 기능을 제공하는데, 특정 expression에 `LABEL_NAME@` 을 붙여서 하나의 Label로 간주하고, `break`, `continue`, `return` 등을 사용하는 기능이다.
+- C 언어의 `GOTO` 와 매우 닮아있는데, 마찬가지로 사용하지 않는 것을 강력하게 추천한다.
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
 ## F-5. TakeIf와 TakeUnless
