@@ -9,10 +9,11 @@ data class Fruit(
 ) {
     val isSamePrice: Boolean
         get() {
-            if (factoryPrice == null || currentPrice == null) {
-                return false
+            return if (factoryPrice == null || currentPrice == null) {
+                false
+            } else {
+                factoryPrice == currentPrice
             }
-            return factoryPrice == currentPrice
         }
 }
 
@@ -95,7 +96,7 @@ fun main3() {
     // 과일 이름으로 그룹핑하고 원가만 필요해요.
     // groupBy() 안에서 Key와 Value를 동시에 정의할 수 있다.
     val map3: Map<String, List<Long>> = fruits
-        .groupBy({ fruit: Fruit -> fruit.name}, {fruit: Fruit -> fruit.factoryPrice ?: -1 })
+        .groupBy({ fruit: Fruit -> fruit.name }, { fruit: Fruit -> fruit.factoryPrice ?: -1 })
 
     println("FINISH")
 }
