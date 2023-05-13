@@ -1844,11 +1844,64 @@ val map3: Map<String, List<Long>> = fruits
 
 <br/>
 
-# E. 번외
+# E. 코틀린에서 코루틴(Co-routine)
+
+# F. 번외
+
+## F-1. Type Alias
 
 ```kotlin
+typealias FruitFilter = (Fruit) -> Boolean
 
+fun filterFruits(fruits: List<Fruit>, filter: FruitFilter) {
+    // ...
+}
 ```
+- `(Fruit) -> Boolean` 가 너무 길어서 `FruitFilter` 라는 타입으로 별칭을 지정했다.
+  - 만약 파라미터 개수가 크게 늘어난다면 `typealias` 기능은 유용하게 사용될 것이다.
+
+<br/>
+
+```kotlin
+data class UltraSuperGuardianTribe(
+    val name: String,
+)
+
+typealias USGTMap = Map<String, UltraSuperGuardianTribe>
+```
+- 이름이 긴 클래스를 collection에서 사용할 때도 축약하는 용도로 사용하면 좋다.
+
+<br/>
+
+## F-2. as import
+
+```kotlin
+package lec19.a
+
+fun printHello() {
+    println("Hello! AA")
+}
+```
+```kotlin
+package lec19.b
+
+fun printHello() {
+    println("Hello! BB")
+}
+```
+```kotlin
+package lec19
+
+import lec19.a.printHello as printHelloA
+import lec19.b.printHello as printHelloB
+
+fun main() {
+    printHelloA() // Hello! AA
+    printHelloB() // Hello! BB
+}
+```
+- 다른 패키지에 속해있지만, 같은 이름을 가진 함수를 동시에 가져오고 싶다면 `as import`를 사용해야 한다.
+- `as import`를 사용해서 어떤 클래스나 함수를 가져오는 시점에 이름을 바꾸는 기능이다.
 
 <br/>
 
@@ -1870,14 +1923,6 @@ val map3: Map<String, List<Long>> = fruits
 
 <br/>
 
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
+## F-3. 구조분해와 componentN 함수
+## F-4. Jump와 Label
+## F-5. TakeIf와 TakeUnless
