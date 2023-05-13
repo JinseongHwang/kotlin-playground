@@ -2020,46 +2020,78 @@ out_loop@ for (i in 1..10) {
 
 <br/>
 
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
 ## F-5. TakeIf와 TakeUnless
+
+```kotlin
+fun getNumberOrNull(number: Int): Int? {
+    return if (number <= 0) {
+        null
+    } else {
+        number
+    }
+}
+
+fun getNumberOrNullV2(number: Int): Int? {
+    return number.takeIf { it > 0 }
+}
+
+fun getNumberOrNullV3(number: Int): Int? {
+    return number.takeUnless { it <= 0 }
+}
+
+fun main() {
+    // v1: original
+    println(getNumberOrNull(-1)) // null
+    println(getNumberOrNull(10)) // 10
+
+    // v2: takeIf
+    println(getNumberOrNullV2(-1)) // null
+    println(getNumberOrNullV2(10)) // 10
+
+    // v3: takeUnless
+    println(getNumberOrNullV3(-1)) // null
+    println(getNumberOrNullV3(10)) // 10
+}
+```
+- 처음에 작성한 `getNumberOrNull()` 메서드를 Kotlin에서 제공하는 `takeIf{}`와 `takeUnless{}`를 활용해서 완벽히 동일한 함수로 바꿔보자.
+- `takeIf {}` : 블럭의 람다함수 조건을 만족하면 그 값이, 만족하지 않으면 `null`을 반환한다.
+- `takeUnless {}` : 블럭의 람다함수 조건을 만족하지 않으면 그 값이, 만족하면 `null`을 반환한다.
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
