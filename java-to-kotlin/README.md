@@ -2059,29 +2059,136 @@ fun main() {
 
 <br/>
 
-```kotlin
+## F-6. Scope function
 
+```kotlin
+fun printPerson(person: Person?) {
+    if (person != null) {
+        println(person.name)
+        println(person.age)
+    }
+}
+
+fun printPersonV2(person: Person?) {
+    person?.let {
+        println(it.name)
+        println(it.age)
+    }
+}
 ```
+- scope은 "영역"을 의미하고, function은 "함수"를 의마한다. 즉, scope function은 일시적인 영역을 형성하는 함수라는 의미이다.
+- 위 `printPerson()` 과 `printPersonV2()` 는 동일한 기능을 수행하는 함수이다. 여기서 알아낼 수 있는 scope function의 정의는,
+  - 람다 함수를 사용해 일시적인 영역을 만들고,
+  - 코드를 더 간결하게 만들고,
+  - Functional programming 할 때 method chaining에 활용하는 함수이다.
 
 <br/>
 
 ```kotlin
+fun main() {
+    val person = Person("jinseong", 100)
 
+    val value1 = person.let {
+        it.age
+    }
+    println("value1 => ${value1}")
+
+    val value2 = person.run {
+        this.age
+    }
+    println("value2 => ${value2}")
+
+    val value3 = person.also {
+        it.age
+    }
+    println("value3 => ${value3}")
+
+    val value4 = person.apply {
+        this.age
+    }
+    println("value4 => ${value4}")
+
+    with(person) {
+        println("with => ${person} / 이름: ${name} / 나이: ${this.age}")
+    }
+}
 ```
+```text
+value1 => 100
+value2 => 100
+value3 => Person(name=jinseong, age=100)
+value4 => Person(name=jinseong, age=100)
+with => Person(name=jinseong, age=100) / 이름: jinseong / 나이: 100
+```
+
+Scope function으로는 대표적으로 5가지가 존재한다. (`let{}`, `run{}`, `also{}`, `apply{}`, `with{}`)
+- `let{}`, `run{}`, `also{}`, `apply{}` : 확장함수이다.
+- `with{}` : 객체와 람다함수를 인자로 하는 일반함수이다.
+
+|            | it으로 접근 | this로 접근 |
+|------------|---------|----------|
+| 람다 결과 반환   | let     | run      |
+| 객체 그 자체 반환 | also    | apply    |
+
+- `it` 는 람다 함수의 단일 인자를 가리키는 예약어이다. 만약 `it` 대신 다른 변수명을 사용하고 싶다면 재정의 가능하다. 하지만 생략은 불가능하다.
+- `this`는 확장 함수에서 스스로를 `this`라고 칭할 수 있다. 다른 변수명으로 재정의는 불가능하지만, 생략이 가능하다.
+
+<br/>
+
+**`let` 활용 사례**
+
+```kotlin
+val strings = listOf("APPLE", "CAR", "HI")
+strings.map { it.length }
+    .filter { it >= 3 }
+    .let(::println)
+```
+```text
+[5, 3]
+```
+- `let{}`은 하나 이상의 함수를 call chain 결과로 호출할 때 사용된다.
+  - 여기서는 `let{}` 뒤에 람다함수를 넣은 것이 아니라 인자로 메서드 레퍼런스를 전달했다.
+  - `filter{}`의 결과의 타입이 `List<Int>` 이기 때문에 받아서 출력하면 리스트 형태로 출력된다.
 
 <br/>
 
 ```kotlin
-
+val str: String? = "Hello"
+val length = str?.let {
+    println(it.uppercase())
+    it.length
+}
+println(length)
 ```
+```text
+HELLO
+5
+```
+- non-null 값에 대해서만 scope 안의 code block을 실행시키고 싶을 때 활용한다.
 
 <br/>
 
 ```kotlin
-
+val numbers = listOf("one", "two", "three", "four")
+val modifiedFirstItem = numbers.first()
+    .let { firstItem ->
+        if (firstItem.length >= 5) {
+            firstItem
+        } else {
+            "!$firstItem!"
+        }.uppercase()
+    }
+println(modifiedFirstItem)
 ```
+```text
+!ONE!
+```
+- 일회성으로 제한된 영역에 변수를 만들어야 하는 경우에 활용된다.
+- 하지만 이 경우에는 private method로 분리하는 것이 depth를 줄이고 코드를 깔끔하게 유지하는 데 도움되기 때문에 좋은 용례는 아니다.
 
 <br/>
+
+**`run` 활용 사례**
 
 ```kotlin
 
