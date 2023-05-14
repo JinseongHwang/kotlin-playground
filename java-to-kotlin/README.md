@@ -2088,26 +2088,31 @@ fun printPersonV2(person: Person?) {
 fun main() {
     val person = Person("jinseong", 100)
 
+    // let
     val value1 = person.let {
         it.age
     }
     println("value1 => ${value1}")
 
+    // run
     val value2 = person.run {
         this.age
     }
     println("value2 => ${value2}")
-
+  
+    // also
     val value3 = person.also {
         it.age
     }
     println("value3 => ${value3}")
 
+    // apply
     val value4 = person.apply {
         this.age
     }
     println("value4 => ${value4}")
 
+    // with
     with(person) {
         println("with => ${person} / 이름: ${name} / 나이: ${this.age}")
     }
@@ -2135,7 +2140,7 @@ Scope function으로는 대표적으로 5가지가 존재한다. (`let{}`, `run{
 
 <br/>
 
-**`let` 활용 사례**
+### `let` 활용 사례
 
 ```kotlin
 val strings = listOf("APPLE", "CAR", "HI")
@@ -2188,7 +2193,7 @@ println(modifiedFirstItem)
 
 <br/>
 
-**`run` 활용 사례**
+### `run` 활용 사례**
 
 ```kotlin
 
