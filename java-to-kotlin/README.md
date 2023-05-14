@@ -2250,7 +2250,7 @@ fun main() {
 ```text
 Person(name=jinseong, age=100, hobby=programming)
 ```
-- apply 는 객체 그 자체를 반환하는 특징이 있다.
+- `apply` 는 객체 그 자체를 반환하는 특징이 있다.
 - 객체 설정을 할 때 객체를 수정하는 로직이 call chain 중간에 필요할 때 활용된다.
   - Test fixture를 만들 때 활용할 수 있다.
 
@@ -2259,10 +2259,20 @@ Person(name=jinseong, age=100, hobby=programming)
 ### `also` 활용 사례
 
 ```kotlin
-
+val list = mutableListOf("one", "two", "three")
+list.also { println("The list elements before adding new one: $it") }
+    .add("four")
+println(list)
 ```
+```text
+The list elements before adding new one: [one, two, three]
+[one, two, three, four]
+```
+- `apply`와 마찬가지로 call chain 중간에 필요할 때 활용된다.
 
 <br/>
+
+### `with` 활용 사례
 
 ```kotlin
 
