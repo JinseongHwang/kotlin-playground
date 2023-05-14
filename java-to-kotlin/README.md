@@ -2275,26 +2275,47 @@ The list elements before adding new one: [one, two, three]
 ### `with` 활용 사례
 
 ```kotlin
+data class PersonDto(
+    val name: String,
+    val age: Int,
+)
 
+fun toPersonDtoV1(person: Person): PersonDto {
+    return PersonDto(
+        name = person.name,
+        age = person.age,
+    )
+}
+
+fun toPersonDtoV2(person: Person): PersonDto {
+    return with(person) {
+        PersonDto(
+            name = name,
+            age = age,
+        )
+    }
+}
 ```
+- 특정 객체를 다른 객체로 변환해야 하는데, 모듈 간 의존성에 의해 정적 팩터리 혹은 `toClass()`를 만들기 어려울 때 활용된다.
+- `toPersonDtoV1()` 에 비해서 `toPersonDtoV2()` 는 `this.`, `person.` 등을 생략할 수 있어서 깔끔하게 작성 가능하다.
 
 <br/>
+
+### Scope function도 잘 판단해서 사용하자
 
 ```kotlin
+// 전통적인 코드
+if (person != null && person.isAdult) {
+    view.showPerson(person)
+} else {
+    view.showError()
+}
 
+// Scope function을 사용한 kotlin 스러운 코드
+person?.takeIf { it.isAdult }
+    ?.let(view::showPerson)
+    ?: view.showError()
 ```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
-```kotlin
-
-```
-
-<br/>
-
+- 위 두 코드는 같은 동작을 하는 코드이다.
+- Scope function을 사용했지만, 가독성은 더 떨어진 경우이다. 잘 판단해서 사용하자.
+  - 심지어 `view::showPerson` 에서 `null`을 반환할 경우에 `view.showError` 마저도 호출힌다. 하지만 코드를 보고 알아차리기 쉽지 않다.
