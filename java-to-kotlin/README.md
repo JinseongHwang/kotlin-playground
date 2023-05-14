@@ -2223,12 +2223,40 @@ Person(name=jinseong, age=100)
 ### `apply` 활용 사례
 
 ```kotlin
+data class Person(
+    val name: String,
+    val age: Int,
+    var hobby: String? = null,
+)
 
+fun createPerson(
+    name: String,
+    age: Int,
+    hobby: String,
+): Person {
+    return Person(
+        name = name,
+        age = age,
+    ).apply {
+        this.hobby = hobby
+    }
+}
+
+fun main() {
+    val person = createPerson("jinseong", 100, "programming")
+    println(person)
+}
+```
+```text
+Person(name=jinseong, age=100, hobby=programming)
 ```
 - apply 는 객체 그 자체를 반환하는 특징이 있다.
 - 객체 설정을 할 때 객체를 수정하는 로직이 call chain 중간에 필요할 때 활용된다.
+  - Test fixture를 만들 때 활용할 수 있다.
 
 <br/>
+
+### `also` 활용 사례
 
 ```kotlin
 
