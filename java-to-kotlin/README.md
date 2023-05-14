@@ -2113,9 +2113,11 @@ fun main() {
     println("value4 => ${value4}")
 
     // with
-    with(person) {
+    val value5 = with(person) {
         println("with => ${person} / 이름: ${name} / 나이: ${this.age}")
+        "A"
     }
+    println("value5 => ${value5}")
 }
 ```
 ```text
@@ -2124,6 +2126,7 @@ value2 => 100
 value3 => Person(name=jinseong, age=100)
 value4 => Person(name=jinseong, age=100)
 with => Person(name=jinseong, age=100) / 이름: jinseong / 나이: 100
+value5 => A
 ```
 
 Scope function으로는 대표적으로 5가지가 존재한다. (`let{}`, `run{}`, `also{}`, `apply{}`, `with{}`)
@@ -2193,7 +2196,57 @@ println(modifiedFirstItem)
 
 <br/>
 
-### `run` 활용 사례**
+### `run` 활용 사례
+
+```kotlin
+class PersonRepository {
+    fun save(person: Person): Person {
+        println("Save successfully => ${person}")
+        return person
+    }
+}
+
+fun main() {
+    val personRepository = PersonRepository()
+    val person = Person("jinseong", 100).run(personRepository::save)
+    println(person)
+}
+```
+```text
+Save successfully => Person(name=jinseong, age=100)
+Person(name=jinseong, age=100)
+```
+- 객체 생성 후 바로 어떤 로직을 실행해야 하는 경우 활용된다.
+
+<br/>
+
+### `apply` 활용 사례
+
+```kotlin
+
+```
+- apply 는 객체 그 자체를 반환하는 특징이 있다.
+- 객체 설정을 할 때 객체를 수정하는 로직이 call chain 중간에 필요할 때 활용된다.
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
+
+```kotlin
+
+```
+
+<br/>
 
 ```kotlin
 

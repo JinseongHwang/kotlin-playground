@@ -25,9 +25,11 @@ fun main() {
     }
     println("value4 => ${value4}")
 
-    with(person) {
+    val value5 = with(person) {
         println("with => ${person} / 이름: ${name} / 나이: ${this.age}")
+        "A"
     }
+    println("value5 => ${value5}")
 }
 
 fun printPerson(person: Person?) {
