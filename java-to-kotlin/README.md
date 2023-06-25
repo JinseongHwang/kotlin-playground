@@ -2353,3 +2353,58 @@ person?.takeIf { it.isAdult }
 - 위 두 코드는 같은 동작을 하는 코드이다.
 - Scope function을 사용했지만, 가독성은 더 떨어진 경우이다. 잘 판단해서 사용하자.
   - 심지어 `view::showPerson` 에서 `null`을 반환할 경우에 `view.showError` 마저도 호출힌다. 하지만 코드를 보고 알아차리기 쉽지 않다.
+
+<br/>
+
+## F-7. 수신 객체 지정 람다 (Lambdas with Receivers)
+
+수신 객체 지정 람다는 Java에는 없고 Kotlin에서만 제공되는 기능이다.
+람다 함수를 쓸 때 내가 자주 쓰고싶은 객체를 미리 지정해서 사용하는 람다라는 의미인데, 아래 예시를 보면서 이해해보자.
+Scope function에 나왔던 `with{}`와 `apply{}`가 수신 객체 지정 람다이다.
+
+```kotlin
+fun alphabet(): String {
+    val result = StringBuilder()
+    for (letter in 'A'..'Z') {
+        result.append(letter)
+    }
+    result.append("\nNow I know the alphabet!")
+    return result.toString()
+}
+```
+```
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Now I know the alphabet!
+```
+- 위 함수를 실행하면 아래와 같이 출력된다.
+- 하지만 `result`라는 변수를 너무 자주 참조를 하기 때문에 개발 편의성이 떨어질 수 있다.
+
+<br/>
+
+```kotlin
+fun alphabet() = with(StringBuilder()) {
+    for (letter in 'A'..'Z') {
+        append(letter)
+    }
+    append("\nNow I know the alphabet!")
+    toString()
+}
+```
+- `with{}`를 사용하면 수신 객체가 자동으로 결정되기 때문에 변수 반복을 하지 않아도 된다.
+- 따라서 `StringBuilder` 인스턴스 메서드에 접근할 때는 별도의 인스턴스 표기 없이 호출 가능하다.
+- 람다의 경우 마지막 줄의 식이 반환 값이 되기 때문에 `toString()` 의 결과가 반환된다.
+
+<br/>
+
+```kotlin
+fun alphabet() = StringBuilder().apply {
+    for (letter in 'A'..'Z') {
+        append(letter)
+    }
+    append("\nNow I know the alphabet!")
+}.toString()
+```
+- `apply{}`를 사용하면 `with{}`와 마찬가지로 수신 객체가 자동으로 결정되기 때문에 변수 반복을 하지 않아도 된다.
+- `with{}`와 다른 점은 `apply{}`가 수신 객체를 직접 반환한다는 점이다.
+- 수신 객체인 `StringBuilder` 인스턴스를 반환하고, `toString()`을 호출하는 모습을 볼 수 있다.
+
