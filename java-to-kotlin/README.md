@@ -1,6 +1,6 @@
 # 자바 개발자를 위한 코틀린 입문
 
-> 전반적인 구성은 최태현님의 [자바 개발자를 위한 코틀린 입문](https://www.inflearn.com/course/java-to-kotlin/dashboard) 강의를 보고 실습한 내용입니다.
+> 전반적인 구성은 최태현님의 [자바 개발자를 위한 코틀린 입문](https://www.inflearn.com/course/java-to-kotlin/dashboard) 강의를 보고 실습한 내용입니다.    
 > README 에는 강의에서 설명한 내용, 임의로 추가하고 싶은 내용, 제 생각들이 모두 섞여 있습니다.  
 > ~저도 사람이기 때문에~ 정확하지 않은 정보가 있을 수 있습니다.  
 
