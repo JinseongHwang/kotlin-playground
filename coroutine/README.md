@@ -66,3 +66,10 @@ main @coroutine#2
 - https://www.inflearn.com/community/questions/1407720
 - https://discuss.kotlinlang.org/t/commonpool-default-for-coroutines/11965
 
+## 코루틴 취소 확인
+
+- job.cancel()을 호출하면 즉시 취소되는 것이 아니라 취소 요청이 들어간 것 뿐이다.
+- 취소 요청에 대한 확인은 아래와 같은 경우에 수행된다.
+  - 일시 중단 시점
+  - 코루틴이 실행을 대기하는 시점
+- 
