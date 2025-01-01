@@ -76,3 +76,10 @@ main @coroutine#2
   - delay 함수를 사용해 취소 확인 시점 만들기
   - yield 함수를 사용해 취소 확인 시점 만들기
   - CoroutineScope.isActive 속성을 사용해 취소 확인
+
+## Job 객체의 상태 변수
+
+- Job 객체는 isActive, isCompleted, isCancelled 세 가지 상태 변수를 가지고 있다.
+  - isActive: Job 객체가 실행 중인지 여부 (Active 상태)
+  - isCancelled: Job 객체가 취소 요청되었는지 여부 (Cancelling, Cancelled 상태)
+  - isCompleted: Job 객체가 완료되었는지 여부. 취소 여부와는 무관하게 끝났는지 확인한다 (Cancelled, Completed 상태)
