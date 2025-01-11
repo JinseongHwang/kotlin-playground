@@ -84,6 +84,19 @@ main @coroutine#2
   - isCancelled: Job 객체가 취소 요청되었는지 여부 (Cancelling, Cancelled 상태)
   - isCompleted: Job 객체가 완료되었는지 여부. 취소 여부와는 무관하게 끝났는지 확인한다 (Cancelled, Completed 상태)
 
+## 구조화된 동시성
+
+### 구조화된 동시성의 원칙
+- 구조화된 동시성의 원칙이란 비동기 작업을 구조화해 비동기 프로그래밍을 보다 안정적이고, 예측 가능하게 만드는 원칙입니다.
+- 코루틴은 구조화된 동시성의 원칙을 사용해 비동기 작업인 코루틴을 부모-자식 관계로 구조화해 코루틴이 보다 안전하게 관리되고 제어될 수 있도록 합니다.
+- 코루틴을 부모-자식 관계로 구조화 하기 위해서는 코루틴 빌더 함수의 람다식 안에서 새로운 코루틴 빌더 함수를 호출하기만 하면 됩니다.
+
+### CoroutineContext 상속
+- 부모 코루틴은 실행 환경(CoroutineContext)을 자식에게 상속합니다.
+- 자식 코루틴 생성 시 CoroutineContext를 지정하지 않으면 부모 코루틴의 CoroutineContext를 상속받습니다.
+- 자식 코루틴 생성 시 다른 Context를 넣어주면 상속받은 부모 코루틴의 Context에 덮어쓰기 됩니다.
+  - 예를 들어, 부모 코루틴의 Context에 CoroutineDispatcher와 CoroutineName이 있고, 자식 코루틴에 CoroutineName만 지정하면 CoroutineDispatcher는 부모를 따라가고 CoroutineName만 자식의 것으로 변경됩니다.
+
 ## 궁금한 점
 
 - Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
