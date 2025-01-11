@@ -1,3 +1,12 @@
+## 스터디 자료
+
+- [코틀린 코루틴 책](https://www.yes24.com/Product/Goods/123034354)
+- [코틀린 코루틴 공식 문서](https://kotlinlang.org/docs/coroutines-overview.html)
+- [Kotlin language specification](https://kotlinlang.org/spec/asynchronous-programming-with-coroutines.html)
+- [코틀린 코루틴 조세영님 강의](https://www.inflearn.com/course/%EC%BD%94%ED%8B%80%EB%A6%B0-%EC%BD%94%EB%A3%A8%ED%8B%B4-%EC%99%84%EC%A0%84-%EC%A0%95%EB%B3%B5/dashboard)
+- [코드스피츠 스터디](https://www.youtube.com/playlist?list=PLBNdLLaRx_rLY7dJSA8Hgeet-PeFb9MUF)
+- 글또 스터디 https://github.com/geultto/study-coroutines
+
 ## 코루틴 디버깅
 
 ### Add to VM options
