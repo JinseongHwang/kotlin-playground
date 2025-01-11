@@ -97,6 +97,21 @@ main @coroutine#2
 - 자식 코루틴 생성 시 다른 Context를 넣어주면 상속받은 부모 코루틴의 Context에 덮어쓰기 됩니다.
   - 예를 들어, 부모 코루틴의 Context에 CoroutineDispatcher와 CoroutineName이 있고, 자식 코루틴에 CoroutineName만 지정하면 CoroutineDispatcher는 부모를 따라가고 CoroutineName만 자식의 것으로 변경됩니다.
 
+### Job 객체의 계층 구조
+- 모든 코루틴 빌더 함수(launch, async 등)는 호출 시마다 코루틴 추상체인 Job 객체를 새롭게 생성합니다.
+- 코루틴 제어에 Job 객체가 필요하기 때문에, Job 객체는 부모 코루틴으로부터 상속 받지 않습니다.
+- 즉, 코루틴 빌더를 통해 생성된 코루틴들은 서로 다른 Job을 가집니다.
+- CoroutineContext를 통해서 Job 객체를 얻어올 수 있습니다: `coroutineContext.job` 또는 `coroutineContext[Job]`
+
+### Job의 계층 프로퍼티
+- parent: Job?
+  - 코루틴은 부모 코루틴이 없을 수 있고, 부모 코루틴이 있더라도 최대 하나입니다.
+  - 최상위 코루틴은 부모가 없습니다(null).
+- children: Sequence<Job>
+  - 하나의 코루틴이 여러 자식 코루틴을 가질 수 있습니다.
+- 부모 코루틴의 Job은 children 접근자로 자식 코루틴의 Job에 접근 가능하고, 자식 코루틴의 Job은 parent 접근자로 부모 코루틴의 Job에 접근 가능합니다.
+- 이러한 Job의 계층 구조는 코루틴 구조화에 핵심적인 역할을 합니다.
+
 ## 궁금한 점
 
 - Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
