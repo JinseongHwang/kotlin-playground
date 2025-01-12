@@ -138,6 +138,48 @@ main @coroutine#2
    - isCompleted: false
 3. Completed 상태: 모든 자식 코루틴이 실행 완료된 후에야 부모 코루틴도 완료 상태로 변경
 
+## CoroutineScope
+
+### CoroutineScope 생성
+- CoroutineScope는 CoroutineContext를 가지고 있는 간단한 인터페이스입니다.
+- CoroutineScope를 생성하는 방법:
+  1. 인터페이스 구현:
+     ```kotlin
+     class CustomCoroutineScope : CoroutineScope {
+         override val coroutineContext: CoroutineContext =
+             Job() + newSingleThreadContext("CustomScopeThread")
+     }
+     ```
+  2. 생성자 사용:
+     ```kotlin
+     val scope = CoroutineScope(Dispatchers.IO)
+     ```
+
+### CoroutineContext 구성
+- CoroutineScope 생성 시 내부의 CoroutineContext에는 다음 요소들이 포함될 수 있습니다:
+  - CoroutineName: 코루틴의 이름
+  - Job: 코루틴의 생명주기를 관리하는 객체
+  - CoroutineDispatcher: 코루틴이 실행될 스레드를 결정하는 객체
+- 자식 코루틴 생성 시 Context를 재설정하면 해당 요소만 덮어써집니다.
+- Job 구현체:
+  - JobImpl: Scope 생성 시 사용되는 Job 구현체
+  - StandaloneCoroutine: launch로 생성된 Job 구현체
+
+### CoroutineScope의 역할과 범위
+- CoroutineScope는 특정 범위의 코루틴을 제어하는 역할을 합니다.
+- 범위는 CoroutineScope의 Job에 해당하는 코루틴과 그 자식, 자손이 되는 모든 코루틴입니다.
+- 새로운 CoroutineScope를 생성하면 기존 CoroutineScope 범위에서 벗어난 별도의 코루틴을 만들 수 있습니다.
+  - 하지만 이는 코루틴 생명주기 관리를 어렵게 만들기 때문에 권장되지 않습니다.
+
+### CoroutineScope의 제어
+1. cancel() 메서드
+   - CoroutineScope의 cancel() 메서드를 호출하면 해당 scope의 CoroutineContext.job에 취소 요청을 합니다.
+   - 취소는 해당 scope의 모든 자식 코루틴에게 전파됩니다.
+
+2. isActive 프로퍼티
+   - CoroutineScope의 isActive 프로퍼티를 통해 코루틴이 활성화 상태인지 확인할 수 있습니다.
+   - while 루프 등에서 코루틴의 상태를 체크하는데 유용합니다.
+
 ## 궁금한 점
 
 - Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
