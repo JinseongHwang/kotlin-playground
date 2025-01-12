@@ -180,6 +180,43 @@ main @coroutine#2
    - CoroutineScope의 isActive 프로퍼티를 통해 코루틴이 활성화 상태인지 확인할 수 있습니다.
    - while 루프 등에서 코루틴의 상태를 체크하는데 유용합니다.
 
+## Job 구조화 깨기
+코루틴의 Job 구조화를 깨는 방법은 다음과 같습니다 (권장되지 않음):
+
+1. CoroutineScope 생성자 사용
+   ```kotlin
+   val newScope = CoroutineScope(Dispatchers.IO) // 새로운 루트 Job 생성
+   ```
+   - CoroutineScope 생성 함수는 새로운 루트 Job을 가진 CoroutineContext를 생성합니다.
+
+2. Job() 생성자 사용
+   ```kotlin
+   val newRootJob = Job() // 새로운 루트 Job 생성
+   launch(CoroutineName("Coroutine1") + newRootJob) { ... }
+   ```
+   - Job 생성 함수로 새로운 루트 Job을 생성할 수 있습니다.
+
+3. 일부 코루틴에만 새로운 Job 할당
+   ```kotlin
+   launch(CoroutineName("Coroutine5") + Job()) { ... }
+   ```
+   - 특정 코루틴에만 새로운 Job을 할당하여 기존 Job의 취소와 무관하게 만들 수 있습니다.
+
+### Job 생성자 사용
+1. parent 파라미터를 통한 부모 Job 지정
+   ```kotlin
+   val newJob = Job(parent = parentJob)
+   ```
+   - Job 생성 시 parent 파라미터로 부모 Job을 지정할 수 있습니다.
+   - 지정하지 않으면 Root Job이 됩니다.
+
+2. 생성자로 만든 Job의 특징
+   - 생성자를 통해 생성된 Job은 작업이 끝나도 자동으로 실행 완료 상태가 되지 않습니다.
+   - 명시적으로 complete() 함수를 호출해야 완료 상태가 됩니다:
+     ```kotlin
+     newJob.complete() // 명시적으로 완료 호출
+     ```
+
 ## 궁금한 점
 
 - Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
