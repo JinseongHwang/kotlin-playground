@@ -224,6 +224,64 @@ main @coroutine#2
 - 호출부의 스레드는 runBlocking 함수가 생성한 코루틴이 실행 완료될 때까지 다른 작업에 사용될 수 없다.
 - runBlocking 함수의 차단은 runBlocking 코루틴과 자식 코루틴을 제외한 다른 작업이 스레드를 사용할 수 없게 만드는 것을 의미한다.
 
+## 코루틴 테스트
+
+### TestCoroutineScheduler
+
+- TestCoroutineScheduler는 코루틴 테스트를 위한 가상 시간 스케줄러입니다.
+- 주요 기능:
+  - `advanceTimeBy(delayTimeMillis)`: 가상 시간을 지정된 시간만큼 흐르게 만듭니다.
+  - `advanceUntilIdle()`: 모든 코루틴이 완료될 때까지 가상 시간을 흐르게 만듭니다.
+  - `currentTime`: 현재 가상 시간을 밀리초 단위로 반환합니다.
+
+### 코루틴 테스트 방법
+
+1. TestCoroutineScheduler, TestDispatcher, CoroutineScope을 직접 생성
+```kotlin
+val testCoroutineScheduler = TestCoroutineScheduler()
+val testDispatcher = StandardTestDispatcher(scheduler = testCoroutineScheduler)
+val testCoroutineScope = CoroutineScope(context = testDispatcher)
+```
+
+2. TestDispatcher, CoroutineScope만 직접 생성
+```kotlin
+val testDispatcher = StandardTestDispatcher() // 내부적으로 TestCoroutineScheduler 생성
+val testCoroutineScope = CoroutineScope(context = testDispatcher)
+```
+
+3. TestScope 사용
+```kotlin
+val testCoroutineScope = TestScope() // TestScope > StandardTestDispatcher > TestCoroutineScheduler
+```
+
+4. runTest 사용 (권장)
+```kotlin
+runTest {
+    // 테스트 코드
+}
+```
+
+### runTest 주의사항
+
+- runTest는 runTest 함수로 생성된 코루틴 내부에서 실행된 코루틴의 시간만 자동으로 흐르게 만듭니다.
+- runTest 함수를 호출해 생성된 TestScope을 사용해 새로운 코루틴이 실행된다면, 이 코루틴은 자동으로 시간이 흐르지 않습니다.
+- 이 경우 advanceUntilIdle()을 호출해야만 가상 시간이 흐릅니다.
+
+예시:
+```kotlin
+runTest {
+    var result = 0
+
+    launch {
+        delay(10000L) // 이 코루틴은 자동으로 시간이 흐르지 않음
+        result = 1
+    }
+
+    println("현재 가상 시간: ${currentTime}ms, result: $result") // 0ms, 0
+    advanceUntilIdle() // 수동으로 시간을 흐르게 만듦
+    println("현재 가상 시간: ${currentTime}ms, result: $result") // 10000ms, 1
+}
+
 ## 궁금한 점
 
 - Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
@@ -232,4 +290,4 @@ main @coroutine#2
   - 내부적으로 Dispatchers.Unconfined를 쓰기 때문에 스레드 1개만 할당된다. 따라서 중단 발생 시 다른 스레드에 할당되지 않는다. 스레드 할당받지 못한 코루틴을 처리하는 내부의 싱글 스레드 이벤트 루프에서 처리한다? 이 부분에 대해 자세히 알아보자.
 - 코루틴 Job의 상태는 왜 외부에서 접근 불가능하고, isActive, isCancelled, isCompleted로만 접근 가능한지?
 - launch와 async의 차이점은 무엇인지? 예외의 관점에서? (+ SupervisorJob)
-- 
+- runBlocking을 테스트에 사용했을 때 단점은? runTest를 썼을 때 어떤 단점이?
