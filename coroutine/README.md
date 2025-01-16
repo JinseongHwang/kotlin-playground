@@ -281,6 +281,7 @@ runTest {
     advanceUntilIdle() // 수동으로 시간을 흐르게 만듦
     println("현재 가상 시간: ${currentTime}ms, result: $result") // 10000ms, 1
 }
+```
 
 ## 궁금한 점
 
