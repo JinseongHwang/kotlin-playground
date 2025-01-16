@@ -285,10 +285,10 @@ runTest {
 
 ## 궁금한 점
 
-- Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
-- runBlocking을 거의 사용하지 않는 이유는? 그 대안은?
-- Sprinb MVC > Controller 메서드를 suspend로 작성하면 부모 코루틴은 어디서 빌드해주는지? (suspend fun main 과 동일한건지?)
+- [x] 그냥 runBlocking 쓰면 될거 같은데 꼭 runTest를 써야할까? ([여기](https://github.com/JinseongHwang/kotlin-playground/blob/main/coroutine/labs/runblocking-vs-runtest.md))
+- [ ] Continuation에서 label이 정확히 뭘 의미하는지? (decomplie code 기준으로)
+- [ ] runBlocking을 거의 사용하지 않는 이유는? 그 대안은?
+- [ ] Sprinb MVC > Controller 메서드를 suspend로 작성하면 부모 코루틴은 어디서 빌드해주는지? (suspend fun main 과 동일한건지?)
   - 내부적으로 Dispatchers.Unconfined를 쓰기 때문에 스레드 1개만 할당된다. 따라서 중단 발생 시 다른 스레드에 할당되지 않는다. 스레드 할당받지 못한 코루틴을 처리하는 내부의 싱글 스레드 이벤트 루프에서 처리한다? 이 부분에 대해 자세히 알아보자.
-- 코루틴 Job의 상태는 왜 외부에서 접근 불가능하고, isActive, isCancelled, isCompleted로만 접근 가능한지?
-- launch와 async의 차이점은 무엇인지? 예외의 관점에서? (+ SupervisorJob)
-- runBlocking을 테스트에 사용했을 때 단점은? runTest를 썼을 때 어떤 단점이?
+- [ ] 코루틴 Job의 상태는 왜 외부에서 접근 불가능하고, isActive, isCancelled, isCompleted로만 접근 가능한지?
+- [ ] launch와 async의 차이점은 무엇인지? 예외의 관점에서? (+ SupervisorJob)
