@@ -292,3 +292,5 @@ runTest {
   - 내부적으로 Dispatchers.Unconfined를 쓰기 때문에 스레드 1개만 할당된다. 따라서 중단 발생 시 다른 스레드에 할당되지 않는다. 스레드 할당받지 못한 코루틴을 처리하는 내부의 싱글 스레드 이벤트 루프에서 처리한다? 이 부분에 대해 자세히 알아보자.
 - [ ] 코루틴 Job의 상태는 왜 외부에서 접근 불가능하고, isActive, isCancelled, isCompleted로만 접근 가능한지?
 - [ ] launch와 async의 차이점은 무엇인지? 예외의 관점에서? (+ SupervisorJob)
+- [ ] Spring MVC에 suspend 붙이면 내부적으로 Dispatchers.Unconfined가 할당된다. 스레드 1개가 물려서 동작하다가 중단점을 만나면 코루틴 가장 아래에 있는 싱글스레드 이벤트루프에 도달해서 실행된다. 따라서 매우 느리다. —> 실험 해볼까? 
+  - 싱글스레드 파트의 주석 : We don't have much choice when the task is rejected by the executor. We cannot abandon a coroutine and not execute it, because it may leak resources, so in all such cases we use DefaultExecutor as a "last resort" measure.
