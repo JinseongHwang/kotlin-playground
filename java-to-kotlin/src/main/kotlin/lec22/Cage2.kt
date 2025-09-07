@@ -15,7 +15,9 @@ class Cage2<T> {
 }
 
 fun main() {
-    val cage = Cage2<Carp>()
-    cage.put(Carp("잉어"))
-    val carp: Carp = cage.getFirst() // Carp 타입이 바로 나온다
+    val goldFishCage = Cage2<GoldFish>()
+    goldFishCage.put(GoldFish("금붕어"))
+
+    val cage = Cage2<Fish>()
+//    cage.moveFrom(goldFishCage) // Error: Type mismatch
 }
